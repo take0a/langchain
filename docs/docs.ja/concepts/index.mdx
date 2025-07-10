@@ -1,95 +1,95 @@
-# Conceptual guide
+# 概念ガイド
 
-This guide provides explanations of the key concepts behind the LangChain framework and AI applications more broadly.
+このガイドでは、LangChainフレームワークとAIアプリケーションの背後にある主要な概念について、より広範に解説します。
 
-We recommend that you go through at least one of the [Tutorials](/docs/tutorials) before diving into the conceptual guide. This will provide practical context that will make it easier to understand the concepts discussed here.
+概念ガイドに進む前に、[チュートリアル](/docs/tutorials)を少なくとも1つは参照することをお勧めします。これにより、ここで説明する概念をより理解しやすくなります。
 
-The conceptual guide does not cover step-by-step instructions or specific implementation examples — those are found in the [How-to guides](/docs/how_to/) and [Tutorials](/docs/tutorials). For detailed reference material, please see the [API reference](https://python.langchain.com/api_reference/).
+概念ガイドでは、詳細な手順や具体的な実装例は取り上げていません。それらは[ハウツーガイド](/docs/how_to/)と[チュートリアル](/docs/tutorials)に記載されています。詳細なリファレンス資料については、[APIリファレンス](https://python.langchain.com/api_reference/)をご覧ください。
 
-## High level
+## 概要
 
-- **[Why LangChain?](/docs/concepts/why_langchain)**: Overview of the value that LangChain provides.
-- **[Architecture](/docs/concepts/architecture)**: How packages are organized in the LangChain ecosystem.
+- **[LangChain を選ぶ理由](/docs/concepts/why_langchain)**: LangChain が提供する価値の概要。
+- **[アーキテクチャ](/docs/concepts/architecture)**: LangChain エコシステムにおけるパッケージの構成。
 
-## Concepts
+## コンセプト
 
-- **[Chat models](/docs/concepts/chat_models)**: LLMs exposed via a chat API that process sequences of messages as input and output a message.
-- **[Messages](/docs/concepts/messages)**: The unit of communication in chat models, used to represent model input and output.
-- **[Chat history](/docs/concepts/chat_history)**: A conversation represented as a sequence of messages, alternating between user messages and model responses.
-- **[Tools](/docs/concepts/tools)**: A function with an associated schema defining the function's name, description, and the arguments it accepts.
-- **[Tool calling](/docs/concepts/tool_calling)**: A type of chat model API that accepts tool schemas, along with messages, as input and returns invocations of those tools as part of the output message.
-- **[Structured output](/docs/concepts/structured_outputs)**: A technique to make a chat model respond in a structured format, such as JSON that matches a given schema.
-- **[Memory](https://langchain-ai.github.io/langgraph/concepts/memory/)**: Information about a conversation that is persisted so that it can be used in future conversations.
-- **[Multimodality](/docs/concepts/multimodality)**: The ability to work with data that comes in different forms, such as text, audio, images, and video.
-- **[Runnable interface](/docs/concepts/runnables)**: The base abstraction that many LangChain components and the LangChain Expression Language are built on.
-- **[Streaming](/docs/concepts/streaming)**: LangChain streaming APIs for surfacing results as they are generated.
-- **[LangChain Expression Language (LCEL)](/docs/concepts/lcel)**: A syntax for orchestrating LangChain components. Most useful for simpler applications.
-- **[Document loaders](/docs/concepts/document_loaders)**: Load a source as a list of documents.
-- **[Retrieval](/docs/concepts/retrieval)**: Information retrieval systems can retrieve structured or unstructured data from a datasource in response to a query.
-- **[Text splitters](/docs/concepts/text_splitters)**: Split long text into smaller chunks that can be individually indexed to enable granular retrieval.
-- **[Embedding models](/docs/concepts/embedding_models)**: Models that represent data such as text or images in a vector space.
-- **[Vector stores](/docs/concepts/vectorstores)**: Storage of and efficient search over vectors and associated metadata.
-- **[Retriever](/docs/concepts/retrievers)**: A component that returns relevant documents from a knowledge base in response to a query.
-- **[Retrieval Augmented Generation (RAG)](/docs/concepts/rag)**: A technique that enhances language models by combining them with external knowledge bases.
-- **[Agents](/docs/concepts/agents)**: Use a [language model](/docs/concepts/chat_models) to choose a sequence of actions to take. Agents can interact with external resources via [tool](/docs/concepts/tools).
-- **[Prompt templates](/docs/concepts/prompt_templates)**: Component for factoring out the static parts of a model "prompt" (usually a sequence of messages). Useful for serializing, versioning, and reusing these static parts.
-- **[Output parsers](/docs/concepts/output_parsers)**: Responsible for taking the output of a model and transforming it into a more suitable format for downstream tasks. Output parsers were primarily useful prior to the general availability of [tool calling](/docs/concepts/tool_calling) and [structured outputs](/docs/concepts/structured_outputs).
-- **[Few-shot prompting](/docs/concepts/few_shot_prompting)**: A technique for improving model performance by providing a few examples of the task to perform in the prompt.
-- **[Example selectors](/docs/concepts/example_selectors)**: Used to select the most relevant examples from a dataset based on a given input. Example selectors are used in few-shot prompting to select examples for a prompt.
-- **[Async programming](/docs/concepts/async)**: The basics that one should know to use LangChain in an asynchronous context.
-- **[Callbacks](/docs/concepts/callbacks)**: Callbacks enable the execution of custom auxiliary code in built-in components. Callbacks are used to stream outputs from LLMs in LangChain, trace the intermediate steps of an application, and more.
-- **[Tracing](/docs/concepts/tracing)**: The process of recording the steps that an application takes to go from input to output. Tracing is essential for debugging and diagnosing issues in complex applications.
-- **[Evaluation](/docs/concepts/evaluation)**: The process of assessing the performance and effectiveness of AI applications. This involves testing the model's responses against a set of predefined criteria or benchmarks to ensure it meets the desired quality standards and fulfills the intended purpose. This process is vital for building reliable applications.
-- **[Testing](/docs/concepts/testing)**: The process of verifying that a component of an integration or application works as expected. Testing is essential for ensuring that the application behaves correctly and that changes to the codebase do not introduce new bugs.
+- **[チャットモデル](/docs/concepts/chat_models)**: チャットAPIを介して公開されるLLM。メッセージのシーケンスを入力として処理し、メッセージを出力します。
+- **[メッセージ](/docs/concepts/messages)**: チャットモデルにおける通信の単位で、モデルの入出力を表すために使用されます。
+- **[チャット履歴](/docs/concepts/chat_history)**: ユーザーメッセージとモデルの応答が交互に表示される、メッセージのシーケンスとして表現される会話。
+- **[ツール](/docs/concepts/tools)**: 関数の名前、説明、および受け入れる引数を定義するスキーマが関連付けられた関数。
+- **[ツール呼び出し](/docs/concepts/tool_calling)**: ツールスキーマとメッセージを入力として受け取り、出力メッセージの一部としてそれらのツールの呼び出しを返すチャットモデルAPIの一種。
+- **[構造化出力](/docs/concepts/structured_outputs)**: チャットモデルが、指定されたスキーマに一致する JSON などの構造化形式で応答するようにする手法。
+- **[メモリ](https://langchain-ai.github.io/langgraph/concepts/memory/)**: 会話に関する情報が永続化され、将来の会話で使用できるようになります。
+- **[マルチモーダリティ](/docs/concepts/multimodality)**: テキスト、音声、画像、動画など、さまざまな形式のデータを処理する機能。
+- **[実行可能インターフェース](/docs/concepts/runnables)**: 多くの LangChain コンポーネントと LangChain 式言語の基盤となる基本抽象化。
+- **[ストリーミング](/docs/concepts/streaming)**: 生成された結果をサーフェシングするための LangChain ストリーミング API。
+- **[LangChain Expression Language (LCEL)](/docs/concepts/lcel)**: LangChain コンポーネントをオーケストレーションするための構文。シンプルなアプリケーションに最適です。
+- **[ドキュメントローダー](/docs/concepts/document_loaders)**: ソースをドキュメントのリストとして読み込みます。
+- **[検索](/docs/concepts/retrieval)**: 情報検索システムは、クエリに応じてデータソースから構造化データまたは非構造化データを取得できます。
+- **[テキストスプリッター](/docs/concepts/text_splitters)**: 長いテキストを小さなチャンクに分割し、個別にインデックスを付けることで、きめ細かな検索を可能にします。
+- **[埋め込みモデル](/docs/concepts/embedding_models)**: テキストや画像などのデータをベクトル空間で表現するモデル。
+- **[ベクターストア](/docs/concepts/vectorstores)**: ベクターと関連メタデータの保存と効率的な検索。
+- **[リトリーバー](/docs/concepts/retrievers)**: クエリに応じて知識ベースから関連ドキュメントを返すコンポーネント。
+- **[検索拡張生成 (RAG)](/docs/concepts/rag)**: 言語モデルを外部知識ベースと組み合わせることで拡張する手法。
+- **[エージェント](/docs/concepts/agents)**: [言語モデル](/docs/concepts/chat_models)を使用して、実行するアクションのシーケンスを選択します。エージェントは[ツール](/docs/concepts/tools)を介して外部リソースと対話できます。
+- **[プロンプトテンプレート](/docs/concepts/prompt_templates)**: モデルの「プロンプト」（通常は一連のメッセージ）の静的な部分を切り出すコンポーネントです。これらの静的な部分のシリアル化、バージョン管理、再利用に役立ちます。
+- **[出力パーサー](/docs/concepts/output_parsers)**: モデルの出力を受け取り、下流のタスクに適した形式に変換します。出力パーサーは、[ツール呼び出し](/docs/concepts/tool_calling)と[構造化出力](/docs/concepts/structured_outputs)が一般公開される以前は主に有用でした。
+- **[少数ショットプロンプト](/docs/concepts/few_shot_prompting)**: プロンプトで実行するタスクの例をいくつか提供することで、モデルのパフォーマンスを向上させる手法です。
+- **[例セレクタ](/docs/concepts/example_selectors)**: 与えられた入力に基づいて、データセットから最も関連性の高い例を選択するために使用されます。例セレクタは、few-shot prompting でプロンプトの例を選択するために使用されます。
+- **[非同期プログラミング](/docs/concepts/async)**: LangChain を非同期コンテキストで使用するために知っておくべき基本事項です。
+- **[コールバック](/docs/concepts/callbacks)**: コールバックは、組み込みコンポーネントでカスタム補助コードを実行できるようにします。コールバックは、LangChain の LLM からの出力をストリーミングしたり、アプリケーションの中間ステップをトレースしたりするために使用されます。
+- **[トレース](/docs/concepts/tracing)**: アプリケーションが入力から出力に至るまでのステップを記録するプロセスです。トレースは、複雑なアプリケーションのデバッグと問題の診断に不可欠です。
+- **[評価](/docs/concepts/evaluation)**: AIアプリケーションのパフォーマンスと有効性を評価するプロセス。これには、モデルの応答を事前に定義された一連の基準またはベンチマークに照らしてテストし、必要な品質基準を満たし、意図された目的を達成していることを確認することが含まれます。このプロセスは、信頼性の高いアプリケーションを構築するために不可欠です。
+- **[テスト](/docs/concepts/testing)**: 統合またはアプリケーションのコンポーネントが期待どおりに動作することを確認するプロセス。テストは、アプリケーションが正しく動作し、コードベースの変更によって新たなバグが発生しないことを確認するために不可欠です。
 
-## Glossary
+## 用語集
 
-- **[AIMessageChunk](/docs/concepts/messages#aimessagechunk)**: A partial response from an AI message. Used when streaming responses from a chat model.
-- **[AIMessage](/docs/concepts/messages#aimessage)**: Represents a complete response from an AI model.
-- **[astream_events](/docs/concepts/chat_models#key-methods)**: Stream granular information from [LCEL](/docs/concepts/lcel) chains.
-- **[BaseTool](/docs/concepts/tools/#tool-interface)**: The base class for all tools in LangChain.
-- **[batch](/docs/concepts/runnables)**: Use to execute a runnable with batch inputs.
-- **[bind_tools](/docs/concepts/tool_calling/#tool-binding)**: Allows models to interact with tools.
-- **[Caching](/docs/concepts/chat_models#caching)**: Storing results to avoid redundant calls to a chat model.
-- **[Chat models](/docs/concepts/multimodality/#multimodality-in-chat-models)**: Chat models that handle multiple data modalities.
-- **[Configurable runnables](/docs/concepts/runnables/#configurable-runnables)**: Creating configurable Runnables.
-- **[Context window](/docs/concepts/chat_models#context-window)**: The maximum size of input a chat model can process.
-- **[Conversation patterns](/docs/concepts/chat_history#conversation-patterns)**: Common patterns in chat interactions.
-- **[Document](https://python.langchain.com/api_reference/core/documents/langchain_core.documents.base.Document.html)**: LangChain's representation of a document.
-- **[Embedding models](/docs/concepts/multimodality/#multimodality-in-embedding-models)**: Models that generate vector embeddings for various data types.
-- **[HumanMessage](/docs/concepts/messages#humanmessage)**: Represents a message from a human user.
-- **[InjectedState](/docs/concepts/tools#injectedstate)**: A state injected into a tool function.
-- **[InjectedStore](/docs/concepts/tools#injectedstore)**: A store that can be injected into a tool for data persistence.
-- **[InjectedToolArg](/docs/concepts/tools#injectedtoolarg)**: Mechanism to inject arguments into tool functions.
-- **[input and output types](/docs/concepts/runnables#input-and-output-types)**: Types used for input and output in Runnables.
-- **[Integration packages](/docs/concepts/architecture/#integration-packages)**: Third-party packages that integrate with LangChain.
-- **[Integration tests](/docs/concepts/testing#integration-tests)**: Tests that verify the correctness of the interaction between components, usually run with access to the underlying API that powers an integration.
-- **[invoke](/docs/concepts/runnables)**: A standard method to invoke a Runnable.
-- **[JSON mode](/docs/concepts/structured_outputs#json-mode)**: Returning responses in JSON format.
-- **[langchain-community](/docs/concepts/architecture#langchain-community)**: Community-driven components for LangChain.
-- **[langchain-core](/docs/concepts/architecture#langchain-core)**: Core langchain package. Includes base interfaces and in-memory implementations.
-- **[langchain](/docs/concepts/architecture#langchain)**: A package for higher level components (e.g., some pre-built chains).
-- **[langgraph](/docs/concepts/architecture#langgraph)**: Powerful orchestration layer for LangChain. Use to build complex pipelines and workflows.
-- **[langserve](/docs/concepts/architecture#langserve)**: Used to deploy LangChain Runnables as REST endpoints. Uses FastAPI. Works primarily for LangChain Runnables, does not currently integrate with LangGraph.
-- **[LLMs (legacy)](/docs/concepts/text_llms)**: Older language models that take a string as input and return a string as output.
-- **[Managing chat history](/docs/concepts/chat_history#managing-chat-history)**: Techniques to maintain and manage the chat history.
-- **[OpenAI format](/docs/concepts/messages#openai-format)**: OpenAI's message format for chat models.
-- **[Propagation of RunnableConfig](/docs/concepts/runnables/#propagation-of-runnableconfig)**: Propagating configuration through Runnables. Read if working with python 3.9, 3.10 and async.
-- **[rate-limiting](/docs/concepts/chat_models#rate-limiting)**: Client side rate limiting for chat models.
-- **[RemoveMessage](/docs/concepts/messages/#removemessage)**: An abstraction used to remove a message from chat history, used primarily in LangGraph.
-- **[role](/docs/concepts/messages#role)**: Represents the role (e.g., user, assistant) of a chat message.
-- **[RunnableConfig](/docs/concepts/runnables/#runnableconfig)**: Use to pass run time information to Runnables (e.g., `run_name`, `run_id`, `tags`, `metadata`, `max_concurrency`, `recursion_limit`, `configurable`).
-- **[Standard parameters for chat models](/docs/concepts/chat_models#standard-parameters)**: Parameters such as API key, `temperature`, and `max_tokens`.
-- **[Standard tests](/docs/concepts/testing#standard-tests)**: A defined set of unit and integration tests that all integrations must pass.
-- **[stream](/docs/concepts/streaming)**: Use to stream output from a Runnable or a graph.
-- **[Tokenization](/docs/concepts/tokens)**: The process of converting data into tokens and vice versa.
-- **[Tokens](/docs/concepts/tokens)**: The basic unit that a language model reads, processes, and generates under the hood.
-- **[Tool artifacts](/docs/concepts/tools#tool-artifacts)**: Add artifacts to the output of a tool that will not be sent to the model, but will be available for downstream processing.
-- **[Tool binding](/docs/concepts/tool_calling#tool-binding)**: Binding tools to models.
-- **[@tool](/docs/concepts/tools/#create-tools-using-the-tool-decorator)**: Decorator for creating tools in LangChain.
-- **[Toolkits](/docs/concepts/tools#toolkits)**: A collection of tools that can be used together.
-- **[ToolMessage](/docs/concepts/messages#toolmessage)**: Represents a message that contains the results of a tool execution.
-- **[Unit tests](/docs/concepts/testing#unit-tests)**: Tests that verify the correctness of individual components, run in isolation without access to the Internet.
-- **[Vector stores](/docs/concepts/vectorstores)**: Datastores specialized for storing and efficiently searching vector embeddings.
-- **[with_structured_output](/docs/concepts/structured_outputs/#structured-output-method)**: A helper method for chat models that natively support [tool calling](/docs/concepts/tool_calling) to get structured output matching a given schema specified via Pydantic, JSON schema or a function.
-- **[with_types](/docs/concepts/runnables#with_types)**: Method to overwrite the input and output types of a runnable. Useful when working with complex LCEL chains and deploying with LangServe.
+- **[AIMessageChunk](/docs/concepts/messages#aimessagechunk)**: AIメッセージからの部分的なレスポンス。チャットモデルからのレスポンスをストリーミングする際に使用されます。
+- **[AIMessage](/docs/concepts/messages#aimessage)**: AIモデルからの完全なレスポンスを表します。
+- **[astream_events](/docs/concepts/chat_models#key-methods)**: [LCEL](/docs/concepts/lcel)チェーンから詳細な情報をストリーミングします。
+- **[BaseTool](/docs/concepts/tools/#tool-interface)**: LangChainのすべてのツールの基本クラスです。
+- **[batch](/docs/concepts/runnables)**: バッチ入力を使用してランナブルを実行するために使用します。
+- **[bind_tools](/docs/concepts/tool_calling/#tool-binding)**: モデルがツールと対話できるようにします。
+- **[Caching](/docs/concepts/chat_models#caching)**: チャットモデルへの冗長な呼び出しを回避するために結果を保存します。
+- **[チャットモデル](/docs/concepts/multimodality/#multimodality-in-chat-models)**: 複数のデータモダリティを処理するチャットモデルです。
+- **[Configurable runnables](/docs/concepts/runnables/#configurable-runnables)**: 設定可能な Runnables を作成します。
+- **[Context window](/docs/concepts/chat_models#context-window)**: チャットモデルが処理できる入力の最大サイズです。
+- **[会話パターン](/docs/concepts/chat_history#conversation-patterns)**: チャットインタラクションにおける一般的なパターン。
+- **[ドキュメント](https://python.langchain.com/api_reference/core/documents/langchain_core.documents.base.Document.html)**: LangChain によるドキュメントの表現。
+- **[埋め込みモデル](/docs/concepts/multimodality/#multimodality-in-embedding-models)**: さまざまなデータ型のベクトル埋め込みを生成するモデル。
+- **[HumanMessage](/docs/concepts/messages#humanmessage)**: 人間のユーザーからのメッセージを表します。
+- **[InjectedState](/docs/concepts/tools#injectedstate)**: ツール関数に注入される状態。
+- **[InjectedStore](/docs/concepts/tools#injectedstore)**: データの永続化のためにツールに注入できるストア。
+- **[InjectedToolArg](/docs/concepts/tools#injectedtoolarg)**: ツール関数に引数を注入するメカニズム。
+- **[入力および出力タイプ](/docs/concepts/runnables#input-and-output-types)**: Runnable の入力および出力に使用されるタイプ。
+- **[統合パッケージ](/docs/concepts/architecture/#integration-packages)**: LangChain と統合するサードパーティ製パッケージ。
+- **[統合テスト](/docs/concepts/testing#integration-tests)**: コンポーネント間の相互作用の正確性を検証するテスト。通常、統合を支える基盤となる API にアクセスして実行されます。
+- **[invoke](/docs/concepts/runnables)**: Runnable を呼び出すための標準メソッド。
+- **[JSON モード](/docs/concepts/structured_outputs#json-mode)**: JSON 形式でレスポンスを返します。
+- **[langchain-community](/docs/concepts/architecture#langchain-community)**: LangChain 用のコミュニティ主導コンポーネント。
+- **[langchain-core](/docs/concepts/architecture#langchain-core)**: コア langchain パッケージ。基本インターフェースとメモリ内実装が含まれています。
+- **[langchain](/docs/concepts/architecture#langchain)**: 高レベルコンポーネント (例: ビルド済みチェーン) 用のパッケージ。
+- **[langgraph](/docs/concepts/architecture#langgraph)**: LangChain 用の強力なオーケストレーションレイヤー。複雑なパイプラインやワークフローの構築に使用します。
+- **[langserve](/docs/concepts/architecture#langserve)**: LangChain Runnables を REST エンドポイントとしてデプロイするために使用されます。FastAPI を使用します。主に LangChain Runnables で動作し、現在 LangGraph とは統合されていません。
+- **[LLM (レガシー)](/docs/concepts/text_llms)**: 文字列を入力として受け取り、文字列を出力する古い言語モデルです。
+- **[チャット履歴の管理](/docs/concepts/chat_history#managing-chat-history)**: チャット履歴を維持および管理するための手法。
+- **[OpenAI フォーマット](/docs/concepts/messages#openai-format)**: チャットモデル用の OpenAI メッセージフォーマット。
+- **[RunnableConfig の伝播](/docs/concepts/runnables/#propagation-of-runnableconfig)**: Runnable を介した設定の伝播。Python 3.9、3.10、および非同期処理で作業している場合は、こちらをお読みください。
+- **[レート制限](/docs/concepts/chat_models#rate-limiting)**: チャットモデルのクライアント側レート制限。
+- **[RemoveMessage](/docs/concepts/messages/#removemessage)**: チャット履歴からメッセージを削除するための抽象化。主に LangGraph で使用されます。
+- **[role](/docs/concepts/messages#role)**: チャットメッセージの役割（例：ユーザー、アシスタント）を表します。
+- **[RunnableConfig](/docs/concepts/runnables/#runnableconfig)**: Runnables に実行時情報を渡すために使用します（例：`run_name`、`run_id`、`tags`、`metadata`、`max_concurrency`、`recursion_limit`、`configurable`）。
+- **[チャットモデルの標準パラメータ](/docs/concepts/chat_models#standard-parameters)**: API キー、`temperature`、`max_tokens` などのパラメータ。
+- **[標準テスト](/docs/concepts/testing#standard-tests)**: すべての統合が合格する必要がある、定義済みの単体テストと統合テストのセットです。
+- **[stream](/docs/concepts/streaming)**: Runnable またはグラフからの出力をストリーミングするために使用します。
+- **[Tokenization](/docs/concepts/tokens)**: データをトークンに変換するプロセス、およびその逆のプロセス。
+- **[Tokens](/docs/concepts/tokens)**: 言語モデルが内部的に読み取り、処理、生成する基本単位。
+- **[Tool Artifacts](/docs/concepts/tools#tool-artifacts)**: ツールの出力に、モデルには送信されないものの、下流処理で使用できるアーティファクトを追加します。
+- **[Tool binding](/docs/concepts/tool_calling#tool-binding)**: ツールをモデルにバインドします。
+- **[@tool](/docs/concepts/tools/#create-tools-using-the-tool-decorator)**: LangChain でツールを作成するためのデコレータ。
+- **[Toolkits](/docs/concepts/tools#toolkits)**: 一緒に使用できるツールのコレクション。
+- **[ToolMessage](/docs/concepts/messages#toolmessage)**: ツール実行の結果を含むメッセージを表します。
+- **[Unit test](/docs/concepts/testing#unit-tests)**: 個々のコンポーネントの正確性を検証するテスト。インターネットに接続せずに独立して実行されます。
+- **[Vector store](/docs/concepts/vectorstores)**: ベクトル埋め込みの保存と効率的な検索に特化したデータストア。
+- **[with_structured_output](/docs/concepts/structured_outputs/#structured-output-method)**: [tool calls](/docs/concepts/tool_calling) をネイティブにサポートするチャットモデル用のヘルパーメソッド。Pydantic、JSONスキーマ、または関数で指定されたスキーマに一致する構造化出力を取得します。
+- **[with_types](/docs/concepts/runnables#with_types)**: ランナブルの入出力タイプを上書きするメソッド。複雑なLCELチェーンを操作し、LangServeでデプロイする場合に便利です。

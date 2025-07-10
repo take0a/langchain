@@ -1,9 +1,9 @@
 import ThemedImage from '@theme/ThemedImage';
 import useBaseUrl from '@docusaurus/useBaseUrl';
 
-# Architecture
+# アーキテクチャ
 
-LangChain is a framework that consists of a number of packages.
+LangChain は、複数のパッケージで構成されるフレームワークです。
 
 <ThemedImage
     alt="Diagram outlining the hierarchical organization of the LangChain framework, displaying the interconnected parts across multiple layers."
@@ -18,61 +18,60 @@ LangChain is a framework that consists of a number of packages.
 
 ## langchain-core
 
-This package contains base abstractions for different components and ways to compose them together.
-The interfaces for core components like chat models, vector stores, tools and more are defined here.
-No third-party integrations are defined here.
-The dependencies are very lightweight.
+このパッケージには、さまざまなコンポーネントの基本抽象化と、それらを組み合わせる方法が含まれています。
+チャットモデル、ベクターストア、ツールなどのコアコンポーネントのインターフェースはここで定義されています。
+サードパーティとの統合はここで定義されていません。
+依存関係は非常に軽量です。
 
 ## langchain
 
-The main `langchain` package contains chains and retrieval strategies that make up an application's cognitive architecture.
-These are NOT third-party integrations.
-All chains, agents, and retrieval strategies here are NOT specific to any one integration, but rather generic across all integrations.
+メインの`langchain`パッケージには、アプリケーションの認知アーキテクチャを構成するチェーンと検索戦略が含まれています。
+これらはサードパーティ統合ではありません。
+ここで説明するすべてのチェーン、エージェント、および検索戦略は、特定の統合に固有のものではなく、すべての統合に共通です。
 
 ## Integration packages
 
-Popular integrations have their own packages (e.g. `langchain-openai`, `langchain-anthropic`, etc) so that they can be properly versioned and appropriately lightweight.
+一般的な統合には独自のパッケージ（例：`langchain-openai`、`langchain-anthropic` など）が用意されており、適切なバージョン管理と軽量化が図られています。
 
-For more information see:
+詳細については、以下をご覧ください。
 
-* A list [integrations packages](/docs/integrations/providers/)
-* The [API Reference](https://python.langchain.com/api_reference/) where you can find detailed information about each of the integration package.
+* [統合パッケージ](/docs/integrations/providers/)の一覧
+* 各統合パッケージの詳細情報が記載されている [API リファレンス](https://python.langchain.com/api_reference/)
 
 ## langchain-community
 
-This package contains third-party integrations that are maintained by the LangChain community.
-Key integration packages are separated out (see above).
-This contains integrations for various components (chat models, vector stores, tools, etc).
-All dependencies in this package are optional to keep the package as lightweight as possible.
+このパッケージには、LangChainコミュニティによってメンテナンスされているサードパーティ統合が含まれています。
+主要な統合パッケージは分離されています（上記参照）。
+このパッケージには、チャットモデル、ベクターストア、ツールなど、様々なコンポーネントの統合が含まれています。
+このパッケージ内のすべての依存関係は、パッケージを可能な限り軽量に保つためにオプションです。
 
 ## langgraph
 
-`langgraph` is an extension of `langchain` aimed at building robust and stateful multi-actor applications with LLMs by modeling steps as edges and nodes in a graph.
+`langgraph` は `langchain` の拡張版であり、ステップをグラフ内のエッジとノードとしてモデル化することで、LLM を用いた堅牢でステートフルなマルチアクターアプリケーションの構築を目指しています。
 
-LangGraph exposes high level interfaces for creating common types of agents, as well as a low-level API for composing custom flows.
+LangGraph は、一般的なエージェントを作成するための高レベルインターフェースと、カスタムフローを作成するための低レベル API を公開しています。
 
-:::info[Further reading]
+:::info[参考資料]
 
-* See our LangGraph overview [here](https://langchain-ai.github.io/langgraph/concepts/high_level/#core-principles).
-* See our LangGraph Academy Course [here](https://academy.langchain.com/courses/intro-to-langgraph).
-
+* LangGraphの概要については[こちら](https://langchain-ai.github.io/langgraph/concepts/high_level/#core-principles)をご覧ください。
+* LangGraphアカデミーコースについては[こちら](https://academy.langchain.com/courses/intro-to-langgraph)をご覧ください。
 :::
 
 ## langserve
 
-A package to deploy LangChain chains as REST APIs. Makes it easy to get a production ready API up and running.
+LangChainチェーンをREST APIとしてデプロイするためのパッケージ。本番環境に対応したAPIを簡単に立ち上げ、実行できます。
 
 :::important
-LangServe is designed to primarily deploy simple Runnables and work with well-known primitives in langchain-core.
+LangServeは、主にシンプルなRunnableをデプロイし、langchain-coreのよく知られたプリミティブと連携するように設計されています。
 
-If you need a deployment option for LangGraph, you should instead be looking at LangGraph Platform (beta) which will be better suited for deploying LangGraph applications.
+LangGraphのデプロイオプションが必要な場合は、LangGraphアプリケーションのデプロイに適したLangGraph Platform（ベータ版）をご検討ください。
 :::
 
-For more information, see the [LangServe documentation](/docs/langserve).
+詳細については、[LangServe のドキュメント](/docs/langserve)を参照してください。
 
 
 ## LangSmith
 
-A developer platform that lets you debug, test, evaluate, and monitor LLM applications.
+LLM アプリケーションのデバッグ、テスト、評価、監視を可能にする開発プラットフォームです。
 
-For more information, see the [LangSmith documentation](https://docs.smith.langchain.com)
+詳細については、[LangSmith ドキュメント](https://docs.smith.langchain.com) をご覧ください。

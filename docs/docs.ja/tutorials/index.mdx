@@ -2,46 +2,45 @@
 sidebar_position: 0
 sidebar_class_name: hidden
 ---
-# Tutorials
+# チュートリアル
 
-New to LangChain or LLM app development in general? Read this material to quickly get up and running building your first applications.
+LangChain や LLM アプリ開発全般を初めてご利用ですか？この資料を読んで、すぐに最初のアプリケーションの構築を開始しましょう。
 
-## Get started
+## 始めましょう
 
-Familiarize yourself with LangChain's open-source components by building simple applications.
+シンプルなアプリケーションを構築することで、LangChainのオープンソースコンポーネントに慣れましょう。
 
-If you're looking to get started with [chat models](/docs/integrations/chat/), [vector stores](/docs/integrations/vectorstores/),
-or other LangChain components from a specific provider, check out our supported [integrations](/docs/integrations/providers/).
+[チャットモデル](/docs/integrations/chat/)、[ベクターストア](/docs/integrations/vectorstores/)、または特定のプロバイダーのその他のLangChainコンポーネントの使用を開始する場合は、サポートされている[統合](/docs/integrations/providers/)をご確認ください。
 
-- [Chat models and prompts](/docs/tutorials/llm_chain): Build a simple LLM application with [prompt templates](/docs/concepts/prompt_templates) and [chat models](/docs/concepts/chat_models).
-- [Semantic search](/docs/tutorials/retrievers): Build a semantic search engine over a PDF with [document loaders](/docs/concepts/document_loaders), [embedding models](/docs/concepts/embedding_models/), and [vector stores](/docs/concepts/vectorstores/).
-- [Classification](/docs/tutorials/classification): Classify text into categories or labels using [chat models](/docs/concepts/chat_models) with [structured outputs](/docs/concepts/structured_outputs/).
-- [Extraction](/docs/tutorials/extraction): Extract structured data from text and other unstructured media using [chat models](/docs/concepts/chat_models) and [few-shot examples](/docs/concepts/few_shot_prompting/).
+- [チャットモデルとプロンプト](/docs/tutorials/llm_chain): [プロンプトテンプレート](/docs/concepts/prompt_templates)と[チャットモデル](/docs/concepts/chat_models)を使用して、シンプルなLLMアプリケーションを構築します。
+- [セマンティック検索](/docs/tutorials/retrievers): [ドキュメントローダー](/docs/concepts/document_loaders)、[埋め込みモデル](/docs/concepts/embedding_models/)、[ベクターストア](/docs/concepts/vectorstores/)を使用して、PDFを対象としたセマンティック検索エンジンを構築します。
+- [分類](/docs/tutorials/classification): [チャットモデル](/docs/concepts/chat_models)と[構造化出力](/docs/concepts/structured_outputs/)を使用して、テキストをカテゴリまたはラベルに分類します。
+- [抽出](/docs/tutorials/extraction): [チャットモデル](/docs/concepts/chat_models)と[few-shot examples](/docs/concepts/few_shot_prompting/)を使用して、テキストやその他の非構造化メディアから構造化データを抽出します。
 
-Refer to the [how-to guides](/docs/how_to) for more detail on using all LangChain components.
+すべての LangChain コンポーネントの使用に関する詳細については、[ハウツー ガイド](/docs/how_to) を参照してください。
 
-## Orchestration
+## オーケストレーション
 
-Get started using [LangGraph](https://langchain-ai.github.io/langgraph/) to assemble LangChain components into full-featured applications.
+[LangGraph](https://langchain-ai.github.io/langgraph/) を使って、LangChain コンポーネントをフル機能のアプリケーションに組み立ててみましょう。
 
-- [Chatbots](/docs/tutorials/chatbot): Build a chatbot that incorporates memory.
-- [Agents](/docs/tutorials/agents): Build an agent that interacts with external tools.
-- [Retrieval Augmented Generation (RAG) Part 1](/docs/tutorials/rag): Build an application that uses your own documents to inform its responses.
-- [Retrieval Augmented Generation (RAG) Part 2](/docs/tutorials/qa_chat_history): Build a RAG application that incorporates a memory of its user interactions and multi-step retrieval.
-- [Question-Answering with SQL](/docs/tutorials/sql_qa): Build a question-answering system that executes SQL queries to inform its responses.
-- [Summarization](/docs/tutorials/summarization): Generate summaries of (potentially long) texts.
-- [Question-Answering with Graph Databases](/docs/tutorials/graph): Build a question-answering system that queries a graph database to inform its responses.
+- [チャットボット](/docs/tutorials/chatbot): メモリを組み込んだチャットボットを構築します。
+- [エージェント](/docs/tutorials/agents): 外部ツールと連携するエージェントを構築します。
+- [検索拡張生成 (RAG) パート 1](/docs/tutorials/rag): 独自のドキュメントに基づいて応答を生成するアプリケーションを構築します。
+- [検索拡張生成 (RAG) パート 2](/docs/tutorials/qa_chat_history): ユーザーインタラクションのメモリと複数ステップの検索を組み込んだ RAG アプリケーションを構築します。
+- [SQL による質問応答](/docs/tutorials/sql_qa): SQL クエリを実行して応答を生成する質問応答システムを構築します。
+- [要約](/docs/tutorials/summarization): （長くなる可能性のある）テキストの要約を生成します。
+- [グラフデータベースによる質問応答](/docs/tutorials/graph): グラフデータベースにクエリを実行して応答を生成する質問応答システムを構築します。
 
 ## LangSmith
 
-LangSmith allows you to closely trace, monitor and evaluate your LLM application.
-It seamlessly integrates with LangChain, and you can use it to inspect and debug individual steps of your chains as you build.
+LangSmith を使用すると、LLM アプリケーションを詳細にトレース、監視、評価できます。
+LangSmith は LangChain とシームレスに統合されており、ビルド時にチェーンの各ステップを検査およびデバッグできます。
 
-LangSmith documentation is hosted on a separate site.
-You can peruse [LangSmith tutorials here](https://docs.smith.langchain.com/).
+LangSmith のドキュメントは別のサイトでホストされています。
+[LangSmith のチュートリアルはこちら](https://docs.smith.langchain.com/) でご覧いただけます。
 
-### Evaluation
+### 評価
 
-LangSmith helps you evaluate the performance of your LLM applications. The tutorial below is a great way to get started:
+LangSmith は、LLM アプリケーションのパフォーマンス評価に役立ちます。以下のチュートリアルは、評価を始めるのに最適な方法です。
 
-- [Evaluate your LLM application](https://docs.smith.langchain.com/tutorials/Developers/evaluation)
+- [LLM アプリケーションを評価する](https://docs.smith.langchain.com/tutorials/Developers/evaluation)

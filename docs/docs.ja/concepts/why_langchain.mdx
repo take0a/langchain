@@ -1,39 +1,39 @@
-# Why LangChain?
+# なぜLangChainなのか？
 
-The goal of `langchain` the Python package and LangChain the company is to make it as easy as possible for developers to build applications that reason.
-While LangChain originally started as a single open source package, it has evolved into a company and a whole ecosystem.
-This page will talk about the LangChain ecosystem as a whole.
-Most of the components within the LangChain ecosystem can be used by themselves - so if you feel particularly drawn to certain components but not others, that is totally fine! Pick and choose whichever components you like best for your own use case!
+Pythonパッケージ「langchain」と企業「LangChain」の目標は、開発者が論理的なアプリケーションを可能な限り簡単に構築できるようにすることです。
+LangChainは元々単一のオープンソースパッケージとしてスタートしましたが、企業として、そしてエコシステム全体へと進化しました。
+このページでは、LangChainエコシステム全体について説明します。
+LangChainエコシステム内のコンポーネントのほとんどは単独で使用できます。そのため、特定のコンポーネントに特に魅力を感じていても、他のコンポーネントが気に入らない場合でも、全く問題ありません。ご自身のユースケースに最適なコンポーネントをお選びください。
 
-## Features
+## 機能
 
-There are several primary needs that LangChain aims to address:
+LangChain が解決を目指す主要なニーズはいくつかあります。
 
-1. **Standardized component interfaces:** The growing number of [models](/docs/integrations/chat/) and [related components](/docs/integrations/vectorstores/) for AI applications has resulted in a wide variety of different APIs that developers need to learn and use.
-This diversity can make it challenging for developers to switch between providers or combine components when building applications.
-LangChain exposes a standard interface for key components, making it easy to switch between providers.
+1. **標準化されたコンポーネントインターフェース：** AI アプリケーション向けの [モデル](/docs/integrations/chat/) と [関連コンポーネント](/docs/integrations/vectorstores/) の増加に伴い、開発者は多種多様な API を学習して使用する必要があります。
+この多様性により、開発者はアプリケーション構築時にプロバイダーを切り替えたり、コンポーネントを組み合わせたりすることが困難になる可能性があります。
+LangChain は主要コンポーネントの標準インターフェースを公開しているため、プロバイダー間の切り替えが容易です。
 
-2. **Orchestration:** As applications become more complex, combining multiple components and models, there's [a growing need to efficiently connect these elements into control flows](https://lilianweng.github.io/posts/2023-06-23-agent/) that can [accomplish diverse tasks](https://www.sequoiacap.com/article/generative-ais-act-o1/).
-[Orchestration](https://en.wikipedia.org/wiki/Orchestration_(computing)) is crucial for building such applications.
+2. **オーケストレーション：** アプリケーションが複雑になり、複数のコンポーネントとモデルが組み合わされるようになると、[これらの要素を効率的に制御フローに接続し](https://lilianweng.github.io/posts/2023-06-23-agent/)、[多様なタスクを実行](https://www.sequoiacap.com/article/generative-ais-act-o1/) する必要性が高まっています。
+[オーケストレーション](https://en.wikipedia.org/wiki/Orchestration_(computing))は、このようなアプリケーションの構築に不可欠です。
 
-3. **Observability and evaluation:** As applications become more complex, it becomes increasingly difficult to understand what is happening within them.
-Furthermore, the pace of development can become rate-limited by the [paradox of choice](https://en.wikipedia.org/wiki/Paradox_of_choice).
-For example, developers often wonder how to engineer their prompt or which LLM best balances accuracy, latency, and cost. 
-[Observability](https://en.wikipedia.org/wiki/Observability) and evaluations can help developers monitor their applications and rapidly answer these types of questions with confidence.
-
-
-## Standardized component interfaces
-
-LangChain provides common interfaces for components that are central to many AI applications.
-As an example, all [chat models](/docs/concepts/chat_models/) implement the [BaseChatModel](https://python.langchain.com/api_reference/core/language_models/langchain_core.language_models.chat_models.BaseChatModel.html) interface.
-This provides a standard way to interact with chat models, supporting important but often provider-specific features like [tool calling](/docs/concepts/tool_calling/) and [structured outputs](/docs/concepts/structured_outputs/).
+3. **可観測性と評価:** アプリケーションが複雑になるにつれて、アプリケーション内で何が起こっているかを把握することがますます困難になります。
+さらに、[選択のパラドックス](https://en.wikipedia.org/wiki/Paradox_of_choice)によって開発のペースが制限される可能性があります。
+例えば、開発者はプロンプトをどのように設計するか、精度、レイテンシ、コストのバランスが最も取れたLLMはどれか、といった疑問を抱くことがよくあります。
+[可観測性](https://en.wikipedia.org/wiki/Observability)と評価は、開発者がアプリケーションを監視し、これらの疑問に自信を持って迅速に答えるのに役立ちます。
 
 
-### Example: chat models 
+## 標準化されたコンポーネントインターフェース
 
-Many [model providers](/docs/concepts/chat_models/) support [tool calling](/docs/concepts/tool_calling/), a critical feature for many applications (e.g., [agents](https://langchain-ai.github.io/langgraph/concepts/agentic_concepts/)), that allows a developer to request model responses that match a particular schema.
-The APIs for each provider differ. 
-LangChain's [chat model](/docs/concepts/chat_models/) interface provides a common way to bind [tools](/docs/concepts/tools) to a model in order to support [tool calling](/docs/concepts/tool_calling/):
+LangChainは、多くのAIアプリケーションの中心となるコンポーネントに共通のインターフェースを提供します。
+例えば、すべての[チャットモデル](/docs/concepts/chat_models/)は[BaseChatModel](https://python.langchain.com/api_reference/core/language_models/langchain_core.language_models.chat_models.BaseChatModel.html)インターフェースを実装しています。
+これは、チャットモデルと対話するための標準的な方法を提供し、[ツール呼び出し](/docs/concepts/tool_calling/)や[構造化出力](/docs/concepts/structured_outputs/)といった、重要でありながら多くの場合プロバイダー固有の機能をサポートします。
+
+
+### 例：チャットモデル
+
+多くの[モデルプロバイダー](/docs/concepts/chat_models/)は[ツール呼び出し](/docs/concepts/tool_calling/)をサポートしています。これは多くのアプリケーション（例：[エージェント](https://langchain-ai.github.io/langgraph/concepts/agentic_concepts/)）にとって重要な機能であり、開発者は特定のスキーマに一致するモデルレスポンスをリクエストできます。
+各プロバイダーのAPIは異なります。
+LangChainの[チャットモデル](/docs/concepts/chat_models/)インターフェースは、[ツール呼び出し](/docs/concepts/tools)をモデルにバインドするための共通の方法を提供します。
 
 ```python
 # Tool creation
@@ -42,9 +42,9 @@ tools = [my_tool]
 model_with_tools = model.bind_tools(tools)
 ```
 
-Similarly, getting models to produce [structured outputs](/docs/concepts/structured_outputs/) is an extremely common use case. 
-Providers support different approaches for this, including [JSON mode or tool calling](https://platform.openai.com/docs/guides/structured-outputs), with different APIs.
-LangChain's [chat model](/docs/concepts/chat_models/) interface provides a common way to produce structured outputs using the `with_structured_output()` method:
+同様に、モデルから[構造化出力](/docs/concepts/structured_outputs/)を生成することは、非常に一般的なユースケースです。
+プロバイダーは、[JSONモードまたはツール呼び出し](https://platform.openai.com/docs/guides/structured-outputs)など、さまざまなアプローチを、さまざまなAPIでサポートしています。
+LangChainの[チャットモデル](/docs/concepts/chat_models/)インターフェースは、`with_structured_output()`メソッドを使用して構造化出力を生成する一般的な方法を提供します。
 
 ```python
 # Define schema
@@ -53,57 +53,57 @@ schema = ...
 model_with_structure = model.with_structured_output(schema)
 ```
 
-### Example: retrievers
+### 例: リトリーバー
 
-In the context of [RAG](/docs/concepts/rag/) and LLM application components, LangChain's [retriever](/docs/concepts/retrievers/) interface provides a standard way to connect to many different types of data services or databases (e.g., [vector stores](/docs/concepts/vectorstores) or databases).
-The underlying implementation of the retriever depends on the type of data store or database you are connecting to, but all retrievers implement the [runnable interface](/docs/concepts/runnables/), meaning they can be invoked in a common manner.
+[RAG](/docs/concepts/rag/) および LLM アプリケーションコンポーネントのコンテキストにおいて、LangChain の [リトリーバー](/docs/concepts/retrievers/) インターフェースは、さまざまな種類のデータサービスやデータベース（例: [ベクターストア](/docs/concepts/vectorstores) やデータベース）に接続するための標準的な方法を提供します。
+リトリーバーの基盤となる実装は、接続先のデータストアまたはデータベースの種類によって異なりますが、すべてのリトリーバーは [実行可能インターフェース](/docs/concepts/runnables/) を実装しているため、共通の方法で呼び出すことができます。
 
 ```python
 documents = my_retriever.invoke("What is the meaning of life?")
 ```
 
-## Orchestration 
+## オーケストレーション
 
-While standardization for individual components is useful, we've increasingly seen that developers want to *combine* components into more complex applications. 
-This motivates the need for [orchestration](https://en.wikipedia.org/wiki/Orchestration_(computing)).
-There are several common characteristics of LLM applications that this orchestration layer should support:
+個々のコンポーネントの標準化は有用ですが、開発者がコンポーネントを*組み合わせて*、より複雑なアプリケーションを構築したいというニーズが増えています。
+これが[オーケストレーション](https://en.wikipedia.org/wiki/Orchestration_(computing))の必要性を高めています。
+このオーケストレーション層がサポートすべき、LLMアプリケーションに共通する特性がいくつかあります。
 
-* **Complex control flow:** The application requires complex patterns such as cycles (e.g., a loop that reiterates until a condition is met).
-* **[Persistence](https://langchain-ai.github.io/langgraph/concepts/persistence/):** The application needs to maintain [short-term and / or long-term memory](https://langchain-ai.github.io/langgraph/concepts/memory/).
-* **[Human-in-the-loop](https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/):** The application needs human interaction, e.g., pausing, reviewing, editing, approving certain steps.
+* **複雑な制御フロー:** アプリケーションは、サイクル（例: 条件が満たされるまで繰り返し実行されるループ）などの複雑なパターンを必要とします。
+* **[永続性](https://langchain-ai.github.io/langgraph/concepts/persistence/):** アプリケーションは[短期および/または長期メモリ](https://langchain-ai.github.io/langgraph/concepts/memory/)を維持する必要があります。
+* **[人間参加型](https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/):** アプリケーションは、一時停止、確認、編集、特定のステップの承認など、人間による操作を必要とします。
 
-The recommended way to orchestrate components for complex applications is [LangGraph](https://langchain-ai.github.io/langgraph/concepts/high_level/).
-LangGraph is a library that gives developers a high degree of control by expressing the flow of the application as a set of nodes and edges.
-LangGraph comes with built-in support for [persistence](https://langchain-ai.github.io/langgraph/concepts/persistence/), [human-in-the-loop](https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/), [memory](https://langchain-ai.github.io/langgraph/concepts/memory/), and other features.
-It's particularly well suited for building [agents](https://langchain-ai.github.io/langgraph/concepts/agentic_concepts/) or [multi-agent](https://langchain-ai.github.io/langgraph/concepts/multi_agent/) applications. 
-Importantly, individual LangChain components can be used as LangGraph nodes, but you can also use LangGraph **without** using LangChain components.
+複雑なアプリケーションのコンポーネントをオーケストレーションするための推奨方法は、[LangGraph](https://langchain-ai.github.io/langgraph/concepts/high_level/)です。
+LangGraphは、アプリケーションのフローをノードとエッジのセットとして表現することで、開発者に高度な制御を提供するライブラリです。
+LangGraph には、[persistence](https://langchain-ai.github.io/langgraph/concepts/persistence/)、[human-in-the-loop](https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/)、[memory](https://langchain-ai.github.io/langgraph/concepts/memory/) などの機能が組み込まれています。
+特に、[agents](https://langchain-ai.github.io/langgraph/concepts/agentic_concepts/) や [multi-agents](https://langchain-ai.github.io/langgraph/concepts/multi_agent/) アプリケーションの構築に適しています。
+重要なのは、個々の LangChain コンポーネントを LangGraph ノードとして使用できるだけでなく、LangChain コンポーネントを使用せずに LangGraph を使用することもできることです。
 
-:::info[Further reading]
+:::info[参考資料]
 
-Have a look at our free course, [Introduction to LangGraph](https://academy.langchain.com/courses/intro-to-langgraph), to learn more about how to use LangGraph to build complex applications.
-
-:::
-
-## Observability and evaluation
-
-The pace of AI application development is often rate-limited by high-quality evaluations because there is a paradox of choice. 
-Developers often wonder how to engineer their prompt or which LLM best balances accuracy, latency, and cost. 
-High quality tracing and evaluations can help you rapidly answer these types of questions with confidence.
-[LangSmith](https://docs.smith.langchain.com/) is our platform that supports observability and evaluation for AI applications.
-See our conceptual guides on [evaluations](https://docs.smith.langchain.com/concepts/evaluation) and [tracing](https://docs.smith.langchain.com/concepts/tracing) for more details.
-
-:::info[Further reading]
-
-See our video playlist on [LangSmith tracing and evaluations](https://youtube.com/playlist?list=PLfaIDFEXuae0um8Fj0V4dHG37fGFU8Q5S&feature=shared) for more details.
+LangGraph を使って複雑なアプリケーションを構築する方法について詳しくは、無料コース「LangGraph 入門」(https://academy.langchain.com/courses/intro-to-langgraph) をご覧ください。
 
 :::
 
-## Conclusion
+## 可観測性と評価
 
-LangChain offers standard interfaces for components that are central to many AI applications, which offers a few specific advantages:
-- **Ease of swapping providers:** It allows you to swap out different component providers without having to change the underlying code.
-- **Advanced features:** It provides common methods for more advanced features, such as [streaming](/docs/concepts/streaming) and [tool calling](/docs/concepts/tool_calling/).
+AIアプリケーション開発のペースは、選択のパラドックスが存在するため、高品質な評価によって制限されることがよくあります。
+開発者は、プロンプトをどのように設計するか、またはどのLLMが精度、レイテンシ、コストのバランスを最も適切に取るか、といった疑問に悩むことがよくあります。
+高品質なトレーシングと評価は、こうした疑問に迅速かつ自信を持って答えるのに役立ちます。
+[LangSmith](https://docs.smith.langchain.com/)は、AIアプリケーションの可観測性と評価をサポートするプラットフォームです。
+詳細については、[評価](https://docs.smith.langchain.com/concepts/evaluation)と[トレーシング](https://docs.smith.langchain.com/concepts/tracing)に関する概念ガイドをご覧ください。
 
-[LangGraph](https://langchain-ai.github.io/langgraph/concepts/high_level/) makes it possible to orchestrate complex applications (e.g., [agents](/docs/concepts/agents/)) and provide features like including [persistence](https://langchain-ai.github.io/langgraph/concepts/persistence/), [human-in-the-loop](https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/), or [memory](https://langchain-ai.github.io/langgraph/concepts/memory/).
+:::info[参考資料]
 
-[LangSmith](https://docs.smith.langchain.com/) makes it possible to iterate with confidence on your applications, by providing LLM-specific observability and framework for testing and evaluating your application.
+詳細については、[LangSmith のトレースと評価](https://youtube.com/playlist?list=PLfaIDFEXuae0um8Fj0V4dHG37fGFU8Q5S&feature=shared) に関する動画再生リストをご覧ください。
+
+:::
+
+## 結論
+
+LangChainは、多くのAIアプリケーションの中心となるコンポーネント用の標準インターフェースを提供しており、いくつかの具体的なメリットがあります。
+- **プロバイダーの容易な切り替え:** 基盤となるコードを変更することなく、異なるコンポーネントプロバイダーを切り替えられます。
+- **高度な機能:** [ストリーミング](/docs/concepts/streaming)や[ツール呼び出し](/docs/concepts/tool_calling/)といった高度な機能のための共通メソッドを提供します。
+
+[LangGraph](https://langchain-ai.github.io/langgraph/concepts/high_level/) は、複雑なアプリケーション（[エージェント](/docs/concepts/agents/) など）のオーケストレーションを可能にし、[persistence](https://langchain-ai.github.io/langgraph/concepts/persistence/)、[human-in-the-loop](https://langchain-ai.github.io/langgraph/concepts/human_in_the_loop/)、[memory](https://langchain-ai.github.io/langgraph/concepts/memory/) などの機能を提供します。
+
+[LangSmith](https://docs.smith.langchain.com/) は、LLM 固有の可観測性とアプリケーションのテストおよび評価のためのフレームワークを提供することで、アプリケーションの反復開発を自信を持って実行することを可能にします。
