@@ -6,34 +6,34 @@
 :::
 
 
-## Overview 
+## 概要
 
-Many AI applications interact directly with humans. In these cases, it is appropriate for models to respond in natural language.
-But what about cases where we want a model to also interact *directly* with systems, such as databases or an API?
-These systems often have a particular input schema; for example, APIs frequently have a required payload structure.
-This need motivates the concept of *tool calling*. You can use [tool calling](https://platform.openai.com/docs/guides/function-calling/example-use-cases) to request model responses that match a particular schema.
+多くのAIアプリケーションは人間と直接対話します。このような場合、モデルは自然言語で応答するのが適切です。
+しかし、モデルがデータベースやAPIなどのシステムとも*直接*対話する必要がある場合はどうでしょうか？
+これらのシステムは多くの場合、特定の入力スキーマを持っています。例えば、APIは多くの場合、必須のペイロード構造を持っています。
+このニーズから、*ツール呼び出し*という概念が生まれました。[ツール呼び出し](https://platform.openai.com/docs/guides/function-calling/example-use-cases)を使用すると、特定のスキーマに一致するモデルの応答を要求できます。
 
 :::info
-You will sometimes hear the term `function calling`. We use this term interchangeably with `tool calling`. 
+「関数呼び出し」という言葉を耳にすることがあるでしょう。この用語は「ツール呼び出し」と同義で使われます。
 :::
 
 ![Conceptual overview of tool calling](/img/tool_calling_concept.png)
 
-## Key concepts 
+## 主要な概念
 
-1. **Tool Creation:** Use the [@tool](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.convert.tool.html) decorator to create a [tool](/docs/concepts/tools). A tool is an association between a function and its schema.<br/>
-2. **Tool Binding:** The tool needs to be connected to a model that supports tool calling. This gives the model awareness of the tool and the associated input schema required by the tool.<br/>
-3. **Tool Calling:** When appropriate, the model can decide to call a tool and ensure its response conforms to the tool's input schema.<br/>
-4. **Tool Execution:** The tool can be executed using the arguments provided by the model.
+1. **ツールの作成:** [@tool](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.convert.tool.html) デコレータを使用して [ツール](/docs/concepts/tools) を作成します。ツールとは、関数とそのスキーマを関連付けたものです。<br/>
+2. **ツールのバインディング:** ツールは、ツール呼び出しをサポートするモデルに接続する必要があります。これにより、モデルはツールと、ツールに必要な入力スキーマを認識できるようになります。<br/>
+3. **ツールの呼び出し:** 適切な場合、モデルはツールを呼び出すことを決定し、その応答がツールの入力スキーマに準拠していることを確認できます。<br/>
+4. **ツールの実行:** モデルによって提供された引数を使用してツールを実行できます。
 
 ![Conceptual parts of tool calling](/img/tool_calling_components.png)
 
-## Recommended usage
+## 推奨される使用方法
 
-This pseudocode illustrates the recommended workflow for using tool calling.
-Created tools are passed to `.bind_tools()` method as a list.
-This model can be called, as usual. If a tool call is made, model's response will contain the tool call arguments.
-The tool call arguments can be passed directly to the tool.
+この擬似コードは、ツール呼び出しを使用する際の推奨ワークフローを示しています。
+作成されたツールは、リストとして `.bind_tools()` メソッドに渡されます。
+このモデルは通常どおり呼び出すことができます。ツール呼び出しが行われると、モデルのレスポンスにツール呼び出し引数が含まれます。
+ツール呼び出し引数はツールに直接渡すことができます。
 
 ```python
 # Tool creation
@@ -44,9 +44,9 @@ model_with_tools = model.bind_tools(tools)
 response = model_with_tools.invoke(user_input)
 ```
 
-## Tool creation
+## ツールの作成
 
-The recommended way to create a tool is using the `@tool` decorator.
+ツールを作成するには、`@tool` デコレータを使用することをお勧めします。
 
 ```python
 from langchain_core.tools import tool
@@ -59,28 +59,28 @@ def multiply(a: int, b: int) -> int:
 
 :::info[Further reading]
 
-* See our conceptual guide on [tools](/docs/concepts/tools/) for more details.
-* See our [model integrations](/docs/integrations/chat/) that support tool calling.
-* See our [how-to guide](/docs/how_to/tool_calling/) on tool calling.
+* 詳細については、[ツール](/docs/concepts/tools/)の概念ガイドをご覧ください。
+* ツール呼び出しをサポートする[モデル統合](/docs/integrations/chat/)をご覧ください。
+* ツール呼び出しに関する[ハウツーガイド](/docs/how_to/tool_calling/)をご覧ください。
 
 :::
 
-## Tool binding 
+## ツールバインディング
 
-[Many](https://platform.openai.com/docs/guides/function-calling) [model providers](https://platform.openai.com/docs/guides/function-calling) support tool calling. 
+[多くの](https://platform.openai.com/docs/guides/function-calling) [モデルプロバイダー](https://platform.openai.com/docs/guides/function-calling) がツール呼び出しをサポートしています。
 
 :::tip
-See our [model integration page](/docs/integrations/chat/) for a list of providers that support tool calling.
+ツールの呼び出しをサポートするプロバイダーの一覧については、[モデル統合ページ](/docs/integrations/chat/)を参照してください。
 :::
 
-The central concept to understand is that LangChain provides a standardized interface for connecting tools to models. 
-The `.bind_tools()` method can be used to specify which tools are available for a model to call. 
+理解すべき中心的な概念は、LangChain がツールをモデルに接続するための標準化されたインターフェースを提供していることです。
+`.bind_tools()` メソッドを使用すると、モデルが呼び出せるツールを指定できます。
 
 ```python
 model_with_tools = model.bind_tools(tools_list)
 ```
 
-As a specific example, let's take a function `multiply` and bind it as a tool to a model that supports tool calling.
+具体的な例として、関数 `multiply` をツール呼び出しをサポートするモデルにツールとしてバインドしてみましょう。
 
 ```python
 def multiply(a: int, b: int) -> int:
@@ -95,65 +95,64 @@ def multiply(a: int, b: int) -> int:
 llm_with_tools = tool_calling_model.bind_tools([multiply])
 ```
 
-## Tool calling
+## ツール呼び出し
 
 ![Diagram of a tool call by a model](/img/tool_call_example.png)
 
-A key principle of tool calling is that the model decides when to use a tool based on the input's relevance. The model doesn't always need to call a tool.
-For example, given an unrelated input, the model would not call the tool:
+ツール呼び出しの重要な原則は、モデルが入力の関連性に基づいてツールを使用するタイミングを決定することです。モデルは常にツールを呼び出す必要はありません。例えば、無関係な入力が与えられた場合、モデルはツールを呼び出しません。
 
 ```python
 result = llm_with_tools.invoke("Hello world!")
 ```
 
-The result would be an `AIMessage` containing the model's response in natural language (e.g., "Hello!").
-However, if we pass an input *relevant to the tool*, the model should choose to call it:
+結果は、モデルの自然言語による応答（例：「Hello!」）を含む `AIMessage` になります。
+ただし、*ツールに関連する*入力を渡した場合、モデルはそれを呼び出すことを選択する必要があります。
 
 ```python
 result = llm_with_tools.invoke("What is 2 multiplied by 3?")
 ```
 
-As before, the output `result` will be an `AIMessage`. 
-But, if the tool was called, `result` will have a `tool_calls` [attribute](https://python.langchain.com/api_reference/core/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage.tool_calls).
-This attribute includes everything needed to execute the tool, including the tool name and input arguments:
+これまでと同様に、出力 `result` は `AIMessage` になります。
+ただし、ツールが呼び出された場合、`result` には `tool_calls` [属性](https://python.langchain.com/api_reference/core/messages/langchain_core.messages.ai.AIMessage.html#langchain_core.messages.ai.AIMessage.tool_calls) が含まれます。
+この属性には、ツール名や入力引数など、ツールの実行に必要なすべての情報が含まれます。
 
 ```
 result.tool_calls
 [{'name': 'multiply', 'args': {'a': 2, 'b': 3}, 'id': 'xxx', 'type': 'tool_call'}]
 ```
 
-For more details on usage, see our [how-to guides](/docs/how_to/#tools)!
+使用方法の詳細については、[ハウツーガイド](/docs/how_to/#tools)をご覧ください。
 
-## Tool execution
+## ツールの実行
 
-[Tools](/docs/concepts/tools/) implement the [Runnable](/docs/concepts/runnables/) interface, which means that they can be invoked (e.g., `tool.invoke(args)`) directly.
+[ツール](/docs/concepts/tools/)は[Runnable](/docs/concepts/runnables/)インターフェースを実装しているため、直接呼び出すことができます（例：`tool.invoke(args)`）。
 
-[LangGraph](https://langchain-ai.github.io/langgraph/) offers pre-built components (e.g., [`ToolNode`](https://langchain-ai.github.io/langgraph/reference/prebuilt/#langgraph.prebuilt.tool_node.ToolNode)) that will often invoke the tool in behalf of the user.
-
-:::info[Further reading]
-
-* See our [how-to guide](/docs/how_to/tool_calling/) on tool calling.
-* See the [LangGraph documentation on using ToolNode](https://langchain-ai.github.io/langgraph/how-tos/tool-calling/).
-
-:::
-
-## Forcing tool use
-
-By default, the model has the freedom to choose which tool to use based on the user's input. However, in certain scenarios, you might want to influence the model's decision-making process. LangChain allows you to enforce tool choice (using `tool_choice`), ensuring the model uses either a particular tool or *any* tool from a given list. This is useful for structuring the model's behavior and guiding it towards a desired outcome.
+[LangGraph](https://langchain-ai.github.io/langgraph/)は、多くの場合、ユーザーに代わってツールを呼び出す、ビルド済みのコンポーネント（例：[`ToolNode`](https://langchain-ai.github.io/langgraph/reference/prebuilt/#langgraph.prebuilt.tool_node.ToolNode)）を提供します。
 
 :::info[Further reading]
 
-* See our [how-to guide](/docs/how_to/tool_choice) on forcing tool use.
+* ツール呼び出しについては、[ハウツーガイド](/docs/how_to/tool_calling/)をご覧ください。
+* ToolNode の使用については、[LangGraph ドキュメント](https://langchain-ai.github.io/langgraph/how-tos/tool-calling/)をご覧ください。
 
 :::
 
-## Best practices
+## ツールの使用を強制する
 
-When designing [tools](/docs/concepts/tools/) to be used by a model, it is important to keep in mind that:
+デフォルトでは、モデルはユーザーの入力に基づいて使用するツールを自由に選択できます。しかし、特定のシナリオでは、モデルの意思決定プロセスに影響を与えたい場合があります。LangChainでは、ツールの選択を強制（`tool_choice` を使用）することで、モデルが特定のツール、または指定されたリスト内の任意のツールのいずれかを使用することを保証できます。これは、モデルの挙動を構造化し、望ましい結果に導くのに役立ちます。
 
-* Models that have explicit [tool-calling APIs](/docs/concepts/tool_calling) will be better at tool calling than non-fine-tuned models.
-* Models will perform better if the tools have well-chosen names and descriptions.
-* Simple, narrowly scoped tools are easier for models to use than complex tools.
-* Asking the model to select from a large list of tools poses challenges for the model.
+:::info[Further reading]
+
+* ツールの使用を強制する方法については、[ハウツーガイド](/docs/how_to/tool_choice)をご覧ください。
+
+:::
+
+## ベストプラクティス
+
+モデルで使用する[ツール](/docs/concepts/tools/)を設計する際には、以下の点に留意することが重要です。
+
+* 明示的な[ツール呼び出しAPI](/docs/concepts/tool_calling)を持つモデルは、微調整されていないモデルよりもツール呼び出しが優れています。
+* ツールの名前と説明が適切に選択されていると、モデルのパフォーマンスが向上します。
+* シンプルでスコープが狭いツールは、複雑なツールよりもモデルにとって使いやすいです。
+* モデルに多数のツールリストから選択させると、モデルにとって課題が生じます。
 
 

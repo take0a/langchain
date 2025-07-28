@@ -4,38 +4,38 @@
 - [Chat models](/docs/concepts/chat_models/)
 :::
 
-## Overview
+## 概要
 
-The **tool** abstraction in LangChain associates a Python **function** with a **schema** that defines the function's **name**, **description** and **expected arguments**. 
+LangChain の **tool** 抽象化は、Python **関数** を、関数の **名前**、**説明**、および **想定される引数** を定義する **スキーマ** に関連付けます。
 
-**Tools** can be passed to [chat models](/docs/concepts/chat_models) that support [tool calling](/docs/concepts/tool_calling) allowing the model to request the execution of a specific function with specific inputs.
+**Tools** は、[ツール呼び出し](/docs/concepts/tool_calling) をサポートする [チャットモデル](/docs/concepts/chat_models) に渡すことができ、モデルは特定の入力値で特定の関数の実行を要求できます。
 
-## Key concepts
+## 主要な概念
 
-- Tools are a way to encapsulate a function and its schema in a way that can be passed to a chat model.
-- Create tools using the [@tool](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.convert.tool.html) decorator, which simplifies the process of tool creation, supporting the following:
-   - Automatically infer the tool's **name**, **description** and **expected arguments**, while also supporting customization.
-   - Defining tools that return **artifacts** (e.g. images, dataframes, etc.)
-   - Hiding input arguments from the schema (and hence from the model) using **injected tool arguments**.
+- ツールは、関数とそのスキーマをカプセル化し、チャットモデルに渡すことができる方法です。
+- [@tool](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.convert.tool.html) デコレータを使用してツールを作成します。これにより、ツール作成プロセスが簡素化され、以下の機能がサポートされます。
+    - ツールの **名前**、**説明**、**想定される引数** を自動的に推測し、カスタマイズもサポートします。
+    - **成果物** (画像、データフレームなど) を返すツールを定義します。
+    - **挿入されたツール引数** を使用して、入力引数をスキーマ (およびモデル) から隠蔽します。
 
-## Tool interface
+## ツールインターフェース
 
-The tool interface is defined in the [BaseTool](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.base.BaseTool.html#langchain_core.tools.base.BaseTool) class which is a subclass of the [Runnable Interface](/docs/concepts/runnables).
+ツールインターフェースは、[Runnable インターフェース](/docs/concepts/runnables) のサブクラスである [BaseTool](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.base.BaseTool.html#langchain_core.tools.base.BaseTool) クラスで定義されています。
 
-The key attributes that correspond to the tool's **schema**:
+ツールの **schema** に対応する主要な属性は次のとおりです。
 
-- **name**: The name of the tool.
-- **description**: A description of what the tool does.
-- **args**: Property that returns the JSON schema for the tool's arguments.
+- **name**: ツールの名前。
+- **description**: ツールの機能の説明。
+- **args**: ツールの引数の JSON スキーマを返すプロパティ。
 
-The key methods to execute the function associated with the **tool**:
+**tool** に関連付けられた関数を実行するための主要なメソッドは次のとおりです。
 
-- **invoke**: Invokes the tool with the given arguments.
-- **ainvoke**: Invokes the tool with the given arguments, asynchronously. Used for [async programming with Langchain](/docs/concepts/async).
+- **invoke**: 指定された引数でツールを呼び出します。
+- **ainvoke**: 指定された引数でツールを非同期的に呼び出します。 [Langchain を使用した非同期プログラミング](/docs/concepts/async)に使用されます。
 
-## Create tools using the `@tool` decorator
+## `@tool` デコレータを使用してツールを作成する
 
-The recommended way to create tools is using the [@tool](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.convert.tool.html) decorator. This decorator is designed to simplify the process of tool creation and should be used in most cases. After defining a function, you can decorate it with [@tool](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.convert.tool.html) to create a tool that implements the [Tool Interface](#tool-interface).
+ツールを作成する場合は、[@tool](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.convert.tool.html) デコレータを使用することをお勧めします。このデコレータはツール作成プロセスを簡素化するように設計されており、ほとんどの場合に使用できます。関数を定義した後、[@tool](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.convert.tool.html) でデコレートすることで、[ツールインターフェース](#tool-interface) を実装したツールを作成できます。
 
 ```python
 from langchain_core.tools import tool
@@ -46,24 +46,23 @@ def multiply(a: int, b: int) -> int:
    return a * b
 ```
 
-For more details on how to create tools, see the [how to create custom tools](/docs/how_to/custom_tools/) guide.
+ツールの作成方法の詳細については、[カスタム ツールを作成する方法](/docs/how_to/custom_tools/) ガイドを参照してください。
 
 :::note
-LangChain has a few other ways to create tools; e.g., by sub-classing the [BaseTool](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.base.BaseTool.html#langchain_core.tools.base.BaseTool) class or by using `StructuredTool`. These methods are shown in the [how to create custom tools guide](/docs/how_to/custom_tools/), but
-we generally recommend using the `@tool` decorator for most cases.
+LangChainには、ツールを作成する方法が他にもいくつかあります。例えば、[BaseTool](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.base.BaseTool.html#langchain_core.tools.base.BaseTool) クラスのサブクラス化や、`StructuredTool` を使用する方法などがあります。これらの方法は[カスタムツールの作成方法ガイド](/docs/how_to/custom_tools/)に記載されていますが、ほとんどの場合、`@tool` デコレータを使用することをお勧めします。
 :::
 
-## Use the tool directly
+## ツールを直接使用する
 
-Once you have defined a tool, you can use it directly by calling the function. For example, to use the `multiply` tool defined above:
+ツールを定義したら、関数を呼び出すことで直接使用できます。例えば、上記で定義した「multiply」ツールを使用するには、次のようにします。
 
 ```python
 multiply.invoke({"a": 2, "b": 3})
 ```
 
-### Inspect
+### 検査
 
-You can also inspect the tool's schema and other properties:
+ツールのスキーマやその他のプロパティを検査することもできます。
 
 ```python
 print(multiply.name) # multiply
@@ -77,19 +76,18 @@ print(multiply.args)
 ```
 
 :::note
-If you're using pre-built LangChain or LangGraph components like [create_react_agent](https://langchain-ai.github.io/langgraph/reference/prebuilt/#langgraph.prebuilt.chat_agent_executor.create_react_agent),you might not need to interact with tools directly. However, understanding how to use them can be valuable for debugging and testing. Additionally, when building custom LangGraph workflows, you may find it necessary to work with tools directly.
+[create_react_agent](https://langchain-ai.github.io/langgraph/reference/prebuilt/#langgraph.prebuilt.chat_agent_executor.create_react_agent)のような、LangChainまたはLangGraphのビルド済みコンポーネントを使用している場合は、ツールを直接操作する必要がないかもしれません。しかし、それらの使い方を理解しておくことは、デバッグやテストを行う上で役立ちます。また、カスタムLangGraphワークフローを構築する際には、ツールを直接操作する必要がある場合もあります。
 :::
 
-## Configuring the schema
+## スキーマの設定
 
-The `@tool` decorator offers additional options to configure the schema of the tool (e.g., modify name, description
-or parse the function's doc-string to infer the schema).
+`@tool` デコレータは、ツールのスキーマを設定するための追加オプションを提供します（例：名前や説明の変更、関数の doc-string を解析してスキーマを推測するなど）。
 
-Please see the [API reference for @tool](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.convert.tool.html) for more details and review the [how to create custom tools](/docs/how_to/custom_tools/) guide for examples.
+詳細については、[@tool の API リファレンス](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.convert.tool.html) を参照してください。また、例については、[カスタムツールの作成方法](/docs/how_to/custom_tools/) ガイドをご覧ください。
 
-## Tool artifacts
+## ツールアーティファクト
 
-**Tools** are utilities that can be called by a model, and whose outputs are designed to be fed back to a model. Sometimes, however, there are artifacts of a tool's execution that we want to make accessible to downstream components in our chain or agent, but that we don't want to expose to the model itself. For example if a tool returns a custom object, a dataframe or an image, we may want to pass some metadata about this output to the model without passing the actual output to the model. At the same time, we may want to be able to access this full output elsewhere, for example in downstream tools.
+**ツール** は、モデルから呼び出すことができるユーティリティであり、その出力はモデルにフィードバックされるように設計されています。しかし、ツール実行のアーティファクトの中には、チェーンやエージェント内の下流コンポーネントからアクセスできるようにしたいものの、モデル自体には公開したくないものがあります。例えば、ツールがカスタムオブジェクト、データフレーム、または画像を返す場合、実際の出力をモデルに渡さずに、その出力に関するメタデータをモデルに渡したい場合があります。同時に、下流ツールなど、他の場所からこの出力全体にアクセスできるようにしたい場合もあります。
 
 ```python
 @tool(response_format="content_and_artifact")
@@ -99,28 +97,28 @@ def some_tool(...) -> Tuple[str, Any]:
     return 'Message for chat model', some_artifact 
 ```
 
-See [how to return artifacts from tools](/docs/how_to/tool_artifacts/) for more details.
+詳細については、[ツールから成果物を返す方法](/docs/how_to/tool_artifacts/)を参照してください。
 
-## Special type annotations
+## 特殊な型アノテーション
 
-There are a number of special type annotations that can be used in the tool's function signature to configure the run time behavior of the tool.
+ツールの関数シグネチャ内で使用して、ツールの実行時の動作を設定できる特殊な型アノテーションがいくつかあります。
 
-The following type annotations will end up **removing** the argument from the tool's schema. This can be useful for arguments that should not be exposed to the model and that the model should not be able to control.
+以下の型アノテーションは、ツールのスキーマから引数を**削除**します。これは、モデルに公開すべきではない引数や、モデルが制御できない引数に便利です。
 
-- **InjectedToolArg**: Value should be injected manually at runtime using `.invoke` or `.ainvoke`.
-- **RunnableConfig**: Pass in the RunnableConfig object to the tool.
-- **InjectedState**: Pass in the overall state of the LangGraph graph to the tool.
-- **InjectedStore**: Pass in the LangGraph store object to the tool.
+- **InjectedToolArg**: 実行時に `.invoke` または `.ainvoke` を使用して手動で値を注入する必要があります。
+- **RunnableConfig**: RunnableConfig オブジェクトをツールに渡します。
+- **InjectedState**: LangGraph グラフの全体的な状態をツールに渡します。
+- **InjectedStore**: LangGraph ストアオブジェクトをツールに渡します。
 
-You can also use the `Annotated` type with a string literal to provide a **description** for the corresponding argument that **WILL** be exposed in the tool's schema.
+`Annotated` 型を文字列リテラルと共に使用することで、ツールのスキーマで公開される対応する引数の **説明** を指定することもできます。
 
-- **Annotated[..., "string literal"]** -- Adds a description to the argument that will be exposed in the tool's schema.
+- **Annotated[..., "文字列リテラル"]** -- ツールのスキーマで公開される引数に説明を追加します。
 
 ### InjectedToolArg
 
-There are cases where certain arguments need to be passed to a tool at runtime but should not be generated by the model itself. For this, we use the `InjectedToolArg` annotation, which allows certain parameters to be hidden from the tool's schema.
+実行時にツールに渡す必要がある引数があるものの、モデル自体では生成したくない場合があります。このような場合には、`InjectedToolArg` アノテーションを使用します。これにより、特定のパラメータをツールのスキーマから隠蔽できます。
 
-For example, if a tool requires a `user_id` to be injected dynamically at runtime, it can be structured in this way:
+例えば、ツールが実行時に動的に `user_id` を注入する必要がある場合、次のように構造化できます。
 
 ```python
 from langchain_core.tools import tool, InjectedToolArg
@@ -131,17 +129,16 @@ def user_specific_tool(input_data: str, user_id: InjectedToolArg) -> str:
     return f"User {user_id} processed {input_data}"
 ```
 
-Annotating the `user_id` argument with `InjectedToolArg` tells LangChain that this argument should not be exposed as part of the
-tool's schema.
+`user_id` 引数に `InjectedToolArg` アノテーションを付けることにより、LangChain に対して、この引数をツールのスキーマの一部として公開しないことを指示します。
 
-See [how to pass run time values to tools](/docs/how_to/tool_runtime/) for more details on how to use `InjectedToolArg`.  
+`InjectedToolArg` の使用方法の詳細については、[実行時の値をツールに渡す方法](/docs/how_to/tool_runtime/) を参照してください。
 
 
 ### RunnableConfig
 
-You can use the `RunnableConfig` object to pass custom run time values to tools.
+`RunnableConfig` オブジェクトを使用すると、ツールにカスタム実行時値を渡すことができます。
 
-If you need to access the [RunnableConfig](/docs/concepts/runnables/#runnableconfig) object from within a tool. This can be done by using the `RunnableConfig` annotation in the tool's function signature.
+ツール内から [RunnableConfig](/docs/concepts/runnables/#runnableconfig) オブジェクトにアクセスする必要がある場合は、ツールの関数シグネチャで `RunnableConfig` アノテーションを使用することで実現できます。
 
 ```python
 from langchain_core.runnables import RunnableConfig
@@ -155,40 +152,39 @@ async def some_func(..., config: RunnableConfig) -> ...:
 await some_func.ainvoke(..., config={"configurable": {"value": "some_value"}})
 ```
 
-The `config` will not be part of the tool's schema and will be injected at runtime with appropriate values.
+`config` はツールのスキーマの一部ではなく、実行時に適切な値が挿入されます。
 
 :::note
-You may need to access the `config` object to manually propagate it to subclass. This happens if you're working with python 3.9 / 3.10 in an [async](/docs/concepts/async) environment and need to manually propagate the `config` object to sub-calls.
+`config` オブジェクトにアクセスして、サブクラスに手動で伝播させる必要がある場合があります。これは、Python 3.9 / 3.10 を [async](/docs/concepts/async) 環境で使用していて、`config` オブジェクトをサブクラス呼び出しに手動で伝播させる必要がある場合に発生します。
 
-Please read [Propagation RunnableConfig](/docs/concepts/runnables/#propagation-of-runnableconfig) for more details to learn how to propagate the `RunnableConfig` down the call chain manually (or upgrade to Python 3.11 where this is no longer an issue).
+`RunnableConfig を呼び出しチェーンに手動で伝播させる方法については、[RunnableConfig の伝播](/docs/concepts/runnables/#propagation-of-runnableconfig) を参照してください（または、この問題が解消される Python 3.11 にアップグレードしてください）。
 :::
 
 ### InjectedState
 
-Please see the [InjectedState](https://langchain-ai.github.io/langgraph/reference/prebuilt/#langgraph.prebuilt.tool_node.InjectedState) documentation for more details.
+詳細については、[InjectedState](https://langchain-ai.github.io/langgraph/reference/prebuilt/#langgraph.prebuilt.tool_node.InjectedState) のドキュメントを参照してください。
 
 ### InjectedStore
 
-Please see the [InjectedStore](https://langchain-ai.github.io/langgraph/reference/prebuilt/#langgraph.prebuilt.tool_node.InjectedStore) documentation for more details.
+詳細については、[InjectedStore](https://langchain-ai.github.io/langgraph/reference/prebuilt/#langgraph.prebuilt.tool_node.InjectedStore) のドキュメントを参照してください。
 
-## Best practices
+## ベストプラクティス
 
-When designing tools to be used by models, keep the following in mind:
+モデルで使用するツールを設計する際は、以下の点に留意してください。
 
-- Tools that are well-named, correctly-documented and properly type-hinted are easier for models to use.
-- Design simple and narrowly scoped tools, as they are easier for models to use correctly.
-- Use chat models that support [tool-calling](/docs/concepts/tool_calling) APIs to take advantage of tools.
+- 適切な名前が付けられ、正しくドキュメント化され、適切な型ヒントが設定されたツールは、モデルにとって使いやすくなります。
+- シンプルでスコープを限定したツールを設計すると、モデルにとって正しく使いやすくなります。
+- ツールを活用するには、[ツール呼び出し](/docs/concepts/tool_calling) API をサポートするチャットモデルを使用してください。
 
 
 ## Toolkits
 <span data-heading-keywords="toolkit,toolkits"></span>
 
-LangChain has a concept of **toolkits**. This a very thin abstraction that groups tools together that
-are designed to be used together for specific tasks.
+LangChainには**toolkits**という概念があります。これは、特定のタスクで一緒に使用するように設計されたツールをグループ化した、非常に薄い抽象化です。
 
 ### Interface
 
-All Toolkits expose a `get_tools` method which returns a list of tools. You can therefore do:
+すべてのツールキットはツールのリストを返す `get_tools` メソッドを公開しています。そのため、次のように実行できます。
 
 ```python
 # Initialize a toolkit
@@ -198,14 +194,14 @@ toolkit = ExampleToolkit(...)
 tools = toolkit.get_tools()
 ```
 
-## Related resources
+## 関連リソース
 
-See the following resources for more information:
+詳細については、以下のリソースをご覧ください。
 
-- [API Reference for @tool](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.convert.tool.html)
-- [How to create custom tools](/docs/how_to/custom_tools/)
-- [How to pass run time values to tools](/docs/how_to/tool_runtime/)
-- [All LangChain tool how-to guides](https://docs.langchain.com/docs/how_to/#tools)
-- [Additional how-to guides that show usage with LangGraph](https://langchain-ai.github.io/langgraph/how-tos/tool-calling/)
-- Tool integrations, see the [tool integration docs](https://docs.langchain.com/docs/integrations/tools/).
+- [@tool の API リファレンス](https://python.langchain.com/api_reference/core/tools/langchain_core.tools.convert.tool.html)
+- [カスタムツールの作成方法](/docs/how_to/custom_tools/)
+- [ツールにランタイム値を渡す方法](/docs/how_to/tool_runtime/)
+- [LangChain ツールのすべてのハウツーガイド](https://docs.langchain.com/docs/how_to/#tools)
+- [LangGraph の使用方法を示す追加のハウツーガイド](https://langchain-ai.github.io/langgraph/how-tos/tool-calling/)
+- ツールの統合については、[ツール統合ドキュメント](https://docs.langchain.com/docs/integrations/tools/)をご覧ください。
 

@@ -1,168 +1,166 @@
 # Chat models
 
-## Overview
+## 概要
 
-Large Language Models (LLMs) are advanced machine learning models that excel in a wide range of language-related tasks such as text generation, translation, summarization, question answering, and more, without needing task-specific fine tuning for every scenario.
+大規模言語モデル（LLM）は、テキスト生成、翻訳、要約、質問応答など、幅広い言語関連タスクにおいて優れた性能を発揮する高度な機械学習モデルです。シナリオごとにタスク固有の微調整を必要とせず、高い精度を実現します。
 
-Modern LLMs are typically accessed through a chat model interface that takes a list of [messages](/docs/concepts/messages) as input and returns a [message](/docs/concepts/messages) as output.
+最新のLLMは通常、チャットモデルインターフェースを介してアクセスされます。このインターフェースは、[メッセージ](/docs/concepts/messages)のリストを入力として受け取り、[メッセージ](/docs/concepts/messages)を出力として返します。
 
-The newest generation of chat models offer additional capabilities:
+最新世代のチャットモデルは、以下の追加機能を提供します。
 
-* [Tool calling](/docs/concepts/tool_calling): Many popular chat models offer a native [tool calling](/docs/concepts/tool_calling) API. This API allows developers to build rich applications that enable LLMs to interact with external services, APIs, and databases. Tool calling can also be used to extract structured information from unstructured data and perform various other tasks.
-* [Structured output](/docs/concepts/structured_outputs): A technique to make a chat model respond in a structured format, such as JSON that matches a given schema.
-* [Multimodality](/docs/concepts/multimodality): The ability to work with data other than text; for example, images, audio, and video.
+* [ツール呼び出し](/docs/concepts/tool_calling): 多くの一般的なチャットモデルは、ネイティブの[ツール呼び出し](/docs/concepts/tool_calling) APIを提供しています。このAPIを使用すると、開発者はLLMが外部サービス、API、データベースと連携できるリッチアプリケーションを構築できます。ツール呼び出しは、非構造化データから構造化情報を抽出し、さまざまなタスクを実行するためにも使用できます。
+* [構造化出力](/docs/concepts/structured_outputs): チャットモデルが、指定されたスキーマに一致するJSONなどの構造化形式で応答するようにする手法。
+* [マルチモダリティ](/docs/concepts/multimodality): 画像、音声、動画など、テキスト以外のデータを扱う機能。
 
-## Features
+## 機能
 
-LangChain provides a consistent interface for working with chat models from different providers while offering additional features for monitoring, debugging, and optimizing the performance of applications that use LLMs.
+LangChainは、異なるプロバイダーのチャットモデルを扱うための一貫したインターフェースを提供するとともに、LLMを使用するアプリケーションの監視、デバッグ、パフォーマンス最適化のための追加機能も提供します。
 
-* Integrations with many chat model providers (e.g., Anthropic, OpenAI, Ollama, Microsoft Azure, Google Vertex, Amazon Bedrock, Hugging Face, Cohere, Groq). Please see [chat model integrations](/docs/integrations/chat/) for an up-to-date list of supported models.
-* Use either LangChain's [messages](/docs/concepts/messages) format or OpenAI format.
-* Standard [tool calling API](/docs/concepts/tool_calling): standard interface for binding tools to models, accessing tool call requests made by models, and sending tool results back to the model.
-* Standard API for [structuring outputs](/docs/concepts/structured_outputs/#structured-output-method) via the `with_structured_output` method.
-* Provides support for [async programming](/docs/concepts/async), [efficient batching](/docs/concepts/runnables/#optimized-parallel-execution-batch), [a rich streaming API](/docs/concepts/streaming).
-* Integration with [LangSmith](https://docs.smith.langchain.com) for monitoring and debugging production-grade applications based on LLMs.
-* Additional features like standardized [token usage](/docs/concepts/messages/#aimessage), [rate limiting](#rate-limiting), [caching](#caching) and more.
+* 多数のチャットモデルプロバイダー（Anthropic、OpenAI、Ollama、Microsoft Azure、Google Vertex、Amazon Bedrock、Hugging Face、Cohere、Groqなど）との統合。サポートされているモデルの最新リストについては、[チャットモデル統合](/docs/integrations/chat/)をご覧ください。
+* LangChainの[メッセージ](/docs/concepts/messages)形式またはOpenAI形式のいずれかを使用します。
+* 標準の[ツール呼び出しAPI](/docs/concepts/tool_calling): ツールをモデルにバインドし、モデルからのツール呼び出しリクエストにアクセスし、ツールの結果をモデルに返すための標準インターフェースです。
+* `with_structured_output` メソッドを介して[出力の構造化](/docs/concepts/structured_outputs/#structured-output-method)を行うための標準 API。
+* [非同期プログラミング](/docs/concepts/async)、[効率的なバッチ処理](/docs/concepts/runnables/#optimized-parallel-execution-batch)、[豊富なストリーミング API](/docs/concepts/streaming) のサポートを提供します。
+* LLM に基づく本番環境レベルのアプリケーションの監視とデバッグのための [LangSmith](https://docs.smith.langchain.com) との統合。
+* 標準化された [トークンの使用](/docs/concepts/messages/#aimessage)、[レート制限](#rate-limiting)、[キャッシュ](#caching) などの追加機能。
 
-## Integrations
+## 統合
 
-LangChain has many chat model integrations that allow you to use a wide variety of models from different providers.
+LangChainには、様々なプロバイダーの多様なモデルを利用できるチャットモデル統合が多数用意されています。
 
-These integrations are one of two types:
+これらの統合には、以下の2種類があります。
 
-1. **Official models**: These are models that are officially supported by LangChain and/or model provider. You can find these models in the `langchain-<provider>` packages.
-2. **Community models**: There are models that are mostly contributed and supported by the community. You can find these models in the `langchain-community` package.
+1. **公式モデル**: LangChainまたはモデルプロバイダーによって公式にサポートされているモデルです。これらのモデルは、`langchain-<provider>`パッケージに含まれています。
+2. **コミュニティモデル**: 主にコミュニティによって提供およびサポートされているモデルです。これらのモデルは、`langchain-community`パッケージに含まれています。
 
-LangChain chat models are named with a convention that prefixes "Chat" to their class names (e.g., `ChatOllama`, `ChatAnthropic`, `ChatOpenAI`, etc.).
+LangChainのチャットモデルは、クラス名に「Chat」を接頭辞として付ける命名規則に従って命名されています（例: `ChatOllama`、`ChatAnthropic`、`ChatOpenAI`など）。
 
-Please review the [chat model integrations](/docs/integrations/chat/) for a list of supported models.
+サポートされているモデルの一覧については、[チャットモデル統合](/docs/integrations/chat/)をご覧ください。
 
 :::note
-Models that do **not** include the prefix "Chat" in their name or include "LLM" as a suffix in their name typically refer to older models that do not follow the chat model interface and instead use an interface that takes a string as input and returns a string as output.
+名前に接頭辞「Chat」が**含まれていない**モデル、または名前に接尾辞として「LLM」が含まれているモデルは、通常、チャット モデル インターフェイスに従わず、代わりに文字列を入力として受け取り、文字列を出力として返すインターフェイスを使用する古いモデルを指します。
 :::
 
 
-## Interface
+## インターフェース
 
-LangChain chat models implement the [BaseChatModel](https://python.langchain.com/api_reference/core/language_models/langchain_core.language_models.chat_models.BaseChatModel.html) interface. Because `BaseChatModel` also implements the [Runnable Interface](/docs/concepts/runnables), chat models support a [standard streaming interface](/docs/concepts/streaming), [async programming](/docs/concepts/async), optimized [batching](/docs/concepts/runnables/#optimized-parallel-execution-batch), and more. Please see the [Runnable Interface](/docs/concepts/runnables) for more details.
+LangChain チャットモデルは [BaseChatModel](https://python.langchain.com/api_reference/core/language_models/langchain_core.language_models.chat_models.BaseChatModel.html) インターフェースを実装しています。`BaseChatModel` は [Runnable インターフェース](/docs/concepts/runnables) も実装しているため、チャットモデルは [標準ストリーミングインターフェース](/docs/concepts/streaming)、[非同期プログラミング](/docs/concepts/async)、最適化された [バッチ処理](/docs/concepts/runnables/#optimized-parallel-execution-batch) などをサポートします。詳細については、[Runnable インターフェース](/docs/concepts/runnables) を参照してください。
 
-Many of the key methods of chat models operate on [messages](/docs/concepts/messages) as input and return messages as output.
+チャットモデルの主要なメソッドの多くは、[メッセージ](/docs/concepts/messages) を入力として操作し、出力としてメッセージを返します。
 
-Chat models offer a standard set of parameters that can be used to configure the model. These parameters are typically used to control the behavior of the model, such as the temperature of the output, the maximum number of tokens in the response, and the maximum time to wait for a response. Please see the [standard parameters](#standard-parameters) section for more details.
+チャットモデルには、モデルの設定に使用できる標準的なパラメータセットが用意されています。これらのパラメータは通常、出力の温度、レスポンス内のトークンの最大数、レスポンスの最大待機時間など、モデルの動作を制御するために使用されます。詳細については、[標準パラメータ](#standard-parameters)セクションをご覧ください。
 
 :::note
-In documentation, we will often use the terms "LLM" and "Chat Model" interchangeably. This is because most modern LLMs are exposed to users via a chat model interface.
+ドキュメントでは、「LLM」と「チャットモデル」という用語を同じ意味で使用することがよくあります。これは、ほとんどの最新のLLMがチャットモデルインターフェースを介してユーザーに公開されているためです。
 
-However, LangChain also has implementations of older LLMs that do not follow the chat model interface and instead use an interface that takes a string as input and returns a string as output. These models are typically named without the "Chat" prefix (e.g., `Ollama`, `Anthropic`, `OpenAI`, etc.).
-These models implement the [BaseLLM](https://python.langchain.com/api_reference/core/language_models/langchain_core.language_models.llms.BaseLLM.html#langchain_core.language_models.llms.BaseLLM) interface and may be named with the "LLM" suffix (e.g., `OllamaLLM`, `AnthropicLLM`, `OpenAILLM`, etc.). Generally, users should not use these models.
+ただし、LangChainには、チャットモデルインターフェースに従わず、文字列を入力として受け取り、文字列を出力するインターフェースを使用する、古いLLMの実装も存在します。これらのモデルは通常、「Chat」というプレフィックスなしで命名されます（例：`Ollama`、`Anthropic`、`OpenAI` など）。
+これらのモデルは[BaseLLM](https://python.langchain.com/api_reference/core/language_models/langchain_core.language_models.llms.BaseLLM.html#langchain_core.language_models.llms.BaseLLM)インターフェースを実装しており、"LLM"サフィックスが付く名前が付けられる場合があります（例：`OllamaLLM`、`AnthropicLLM`、`OpenAILLM`など）。通常、ユーザーはこれらのモデルを使用すべきではありません。
 :::
 
-### Key methods
+### 主要なメソッド
 
-The key methods of a chat model are:
+チャットモデルの主要なメソッドは以下のとおりです。
 
-1. **invoke**: The primary method for interacting with a chat model. It takes a list of [messages](/docs/concepts/messages) as input and returns a list of messages as output.
-2. **stream**: A method that allows you to stream the output of a chat model as it is generated.
-3. **batch**: A method that allows you to batch multiple requests to a chat model together for more efficient processing.
-4. **bind_tools**: A method that allows you to bind a tool to a chat model for use in the model's execution context.
-5. **with_structured_output**: A wrapper around the `invoke` method for models that natively support [structured output](/docs/concepts/structured_outputs).
+1. **invoke**: チャットモデルを操作するための基本的なメソッドです。[メッセージ](/docs/concepts/messages)のリストを入力として受け取り、出力としてメッセージのリストを返します。
+2. **stream**: チャットモデルの出力を生成時にストリーミングするメソッドです。
+3. **batch**: チャットモデルへの複数のリクエストをまとめて処理することで、処理効率を高めるメソッドです。
+4. **bind_tools**: ツールをチャットモデルにバインドし、モデルの実行コンテキストで使用できるようにするメソッドです。
+5. **with_structured_output**: [構造化出力](/docs/concepts/structured_outputs)をネイティブにサポートするモデル用の `invoke` メソッドのラッパーです。
 
-Other important methods can be found in the [BaseChatModel API Reference](https://python.langchain.com/api_reference/core/language_models/langchain_core.language_models.chat_models.BaseChatModel.html).
+その他の重要なメソッドについては、[BaseChatModel API リファレンス](https://python.langchain.com/api_reference/core/language_models/langchain_core.language_models.chat_models.BaseChatModel.html) をご覧ください。
 
-### Inputs and outputs
+### 入力と出力
 
-Modern LLMs are typically accessed through a chat model interface that takes [messages](/docs/concepts/messages) as input and returns [messages](/docs/concepts/messages) as output. Messages are typically associated with a role (e.g., "system", "human", "assistant") and one or more content blocks that contain text or potentially multimodal data (e.g., images, audio, video).
+現代のLLMは通常、チャットモデルインターフェースを介してアクセスされます。このインターフェースは、[メッセージ](/docs/concepts/messages)を入力として受け取り、[メッセージ](/docs/concepts/messages)を出力として返します。メッセージは通常、役割（例：システム、人間、アシスタント）と、テキストまたはマルチモーダルデータ（例：画像、音声、動画）を含む1つ以上のコンテンツブロックに関連付けられます。
 
-LangChain supports two message formats to interact with chat models:
+LangChainは、チャットモデルとのやり取りに2つのメッセージ形式をサポートしています。
 
-1. **LangChain Message Format**: LangChain's own message format, which is used by default and is used internally by LangChain.
-2. **OpenAI's Message Format**: OpenAI's message format.
+1. **LangChainメッセージ形式**：LangChain独自のメッセージ形式で、デフォルトで使用され、LangChain内部で使用されます。
+2. **OpenAIメッセージ形式**：OpenAIのメッセージ形式。
 
-### Standard parameters
+### 標準パラメータ
 
-Many chat models have standardized parameters that can be used to configure the model:
+多くのチャットモデルには、モデルの設定に使用できる標準化されたパラメータがあります。
 
 | Parameter      | Description                                                                                                                                                                                                                                                                                                    |
 |----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `model`        | The name or identifier of the specific AI model you want to use (e.g., `"gpt-3.5-turbo"` or `"gpt-4"`).                                                                                                                                                                                                        |
-| `temperature`  | Controls the randomness of the model's output. A higher value (e.g., 1.0) makes responses more creative, while a lower value (e.g., 0.0) makes them more deterministic and focused.                                                                                                                            |
-| `timeout`      | The maximum time (in seconds) to wait for a response from the model before canceling the request. Ensures the request doesn’t hang indefinitely.                                                                                                                                                               |
-| `max_tokens`   | Limits the total number of tokens (words and punctuation) in the response. This controls how long the output can be.                                                                                                                                                                                           |
-| `stop`         | Specifies stop sequences that indicate when the model should stop generating tokens. For example, you might use specific strings to signal the end of a response.                                                                                                                                              |
-| `max_retries`  | The maximum number of attempts the system will make to resend a request if it fails due to issues like network timeouts or rate limits.                                                                                                                                                                        |
-| `api_key`      | The API key required for authenticating with the model provider. This is usually issued when you sign up for access to the model.                                                                                                                                                                              |
-| `base_url`     | The URL of the API endpoint where requests are sent. This is typically provided by the model's provider and is necessary for directing your requests.                                                                                                                                                          |
-| `rate_limiter` | An optional [BaseRateLimiter](https://python.langchain.com/api_reference/core/rate_limiters/langchain_core.rate_limiters.BaseRateLimiter.html#langchain_core.rate_limiters.BaseRateLimiter) to space out requests to avoid exceeding rate limits.  See [rate-limiting](#rate-limiting) below for more details. |
+| `model`        | 使用する特定の AI モデルの名前または識別子 (例: `"gpt-3.5-turbo"` または `"gpt-4"`)。|
+| `temperature`  | モデルの出力のランダム性を制御します。値が高いほど（例：1.0）、応答はより創造的になり、値が低いほど（例：0.0）、応答はより決定論的で焦点が絞られたものになります。|
+| `timeout`      | リクエストをキャンセルする前にモデルからの応答を待つ最大時間（秒単位）。リクエストが無期限にハングアップしないようにします。|
+| `max_tokens`   | レスポンス内のトークン（単語と句読点）の総数を制限します。これにより、出力の長さが制御されます。 |
+| `stop`         | モデルがトークンの生成を停止するタイミングを示す停止シーケンスを指定します。例えば、レスポンスの終了を示す特定の文字列を使用できます。 |
+| `max_retries`  | ネットワーク タイムアウトやレート制限などの問題によりリクエストが失敗した場合に、システムがリクエストの再送信を試行する最大回数。|
+| `api_key`      | モデルプロバイダーへの認証に必要なAPIキー。通常、モデルへのアクセスをサインアップした際に発行されます。|
+| `base_url`     | リクエストが送信されるAPIエンドポイントのURL。これは通常、モデルのプロバイダーによって提供され、リクエストを転送するために必要です。|
+| `rate_limiter` | オプションの[BaseRateLimiter](https://python.langchain.com/api_reference/core/rate_limiters/langchain_core.rate_limiters.BaseRateLimiter.html#langchain_core.rate_limiters.BaseRateLimiter)は、レート制限の超過を回避するためにリクエストの間隔を空けます。詳細については、以下の[rate-limiting](#rate-limiting)を参照してください。 |
 
-Some important things to note:
+重要な注意事項：
 
-- Standard parameters only apply to model providers that expose parameters with the intended functionality. For example, some providers do not expose a configuration for maximum output tokens, so max_tokens can't be supported on these.
-- Standard parameters are currently only enforced on integrations that have their own integration packages (e.g. `langchain-openai`, `langchain-anthropic`, etc.), they're not enforced on models in `langchain-community`.
+- 標準パラメータは、意図された機能を持つパラメータを公開するモデルプロバイダにのみ適用されます。例えば、一部のプロバイダは最大出力トークンの設定を公開していないため、max_tokens はこれらのプロバイダではサポートされません。
+- 標準パラメータは現在、独自の統合パッケージ（例：`langchain-openai`、`langchain-anthropic` など）を持つ統合にのみ適用され、`langchain-community` 内のモデルには適用されません。
 
-Chat models also accept other parameters that are specific to that integration. To find all the parameters supported by a Chat model head to the their respective [API reference](https://python.langchain.com/api_reference/) for that model.
+チャットモデルは、その統合に固有の他のパラメータも受け入れます。チャットモデルでサポートされているすべてのパラメータを確認するには、そのモデルのそれぞれの [API リファレンス](https://python.langchain.com/api_reference/) を参照してください。
 
-## Tool calling
+## ツールの呼び出し
 
-Chat models can call [tools](/docs/concepts/tools) to perform tasks such as fetching data from a database, making API requests, or running custom code. Please
-see the [tool calling](/docs/concepts/tool_calling) guide for more information.
+チャットモデルは、[ツール](/docs/concepts/tools)を呼び出して、データベースからのデータの取得、APIリクエストの送信、カスタムコードの実行などのタスクを実行できます。詳細については、[ツールの呼び出し](/docs/concepts/tool_calling)ガイドをご覧ください。
 
-## Structured outputs
+## 構造化出力
 
-Chat models can be requested to respond in a particular format (e.g., JSON or matching a particular schema). This feature is extremely
-useful for information extraction tasks. Please read more about
-the technique in the [structured outputs](/docs/concepts/structured_outputs) guide.
+チャットモデルは、特定の形式（JSONや特定のスキーマへの一致など）で応答するようにリクエストできます。この機能は、情報抽出タスクに非常に役立ちます。
+この手法の詳細については、[構造化出力](/docs/concepts/structured_outputs)ガイドをご覧ください。
 
-## Multimodality
+## マルチモーダル性
 
-Large Language Models (LLMs) are not limited to processing text. They can also be used to process other types of data, such as images, audio, and video. This is known as [multimodality](/docs/concepts/multimodality).
+大規模言語モデル（LLM）はテキスト処理に限定されません。画像、音声、動画など、他の種類のデータの処理にも使用できます。これは[マルチモーダル性](/docs/concepts/multimodality)と呼ばれます。
 
-Currently, only some LLMs support multimodal inputs, and almost none support multimodal outputs. Please consult the specific model documentation for details.
+現在、マルチモーダル入力をサポートしているのは一部のLLMのみで、マルチモーダル出力をサポートしているのはほぼありません。詳細については、各モデルのドキュメントをご覧ください。
 
-## Context window
+## コンテキストウィンドウ
 
-A chat model's context window refers to the maximum size of the input sequence the model can process at one time. While the context windows of modern LLMs are quite large, they still present a limitation that developers must keep in mind when working with chat models.
+チャットモデルのコンテキストウィンドウとは、モデルが一度に処理できる入力シーケンスの最大サイズを指します。最新のLLMのコンテキストウィンドウはかなり大きいですが、チャットモデルを扱う際に開発者が留意すべき制限事項があります。
 
-If the input exceeds the context window, the model may not be able to process the entire input and could raise an error. In conversational applications, this is especially important because the context window determines how much information the model can "remember" throughout a conversation. Developers often need to manage the input within the context window to maintain a coherent dialogue without exceeding the limit. For more details on handling memory in conversations, refer to the [memory](https://langchain-ai.github.io/langgraph/concepts/memory/).
+入力がコンテキストウィンドウを超えると、モデルは入力全体を処理できず、エラーが発生する可能性があります。会話型アプリケーションでは、コンテキストウィンドウによって会話を通してモデルが「記憶」できる情報量が決まるため、これは特に重要です。開発者は、制限を超えずに一貫性のある会話を維持するために、コンテキストウィンドウ内で入力を管理しなければならないことがよくあります。会話におけるメモリ処理の詳細については、[メモリ](https://langchain-ai.github.io/langgraph/concepts/memory/)を参照してください。
 
-The size of the input is measured in [tokens](/docs/concepts/tokens) which are the unit of processing that the model uses.
+入力のサイズは、モデルが使用する処理単位である[トークン](/docs/concepts/tokens)で測定されます。
 
-## Advanced topics
+## 高度なトピック
  
-### Rate-limiting
+### レート制限
 
-Many chat model providers impose a limit on the number of requests that can be made in a given time period.
+多くのチャットモデルプロバイダーは、一定期間内に送信できるリクエスト数に制限を設けています。
 
-If you hit a rate limit, you will typically receive a rate limit error response from the provider, and will need to wait before making more requests.
+レート制限に達すると、通常、プロバイダーからレート制限エラー応答が返され、それ以上リクエストを送信する前に待機する必要があります。
 
-You have a few options to deal with rate limits:
+レート制限に対処するには、いくつかの方法があります。
 
-1. Try to avoid hitting rate limits by spacing out requests: Chat models accept a `rate_limiter` parameter that can be provided during initialization. This parameter is used to control the rate at which requests are made to the model provider. Spacing out the requests to a given model is a particularly useful strategy when benchmarking models to evaluate their performance. Please see the [how to handle rate limits](/docs/how_to/chat_model_rate_limiting/) for more information on how to use this feature.
-2. Try to recover from rate limit errors: If you receive a rate limit error, you can wait a certain amount of time before retrying the request. The amount of time to wait can be increased with each subsequent rate limit error. Chat models have a `max_retries` parameter that can be used to control the number of retries. See the [standard parameters](#standard-parameters) section for more information.
-3. Fallback to another chat model: If you hit a rate limit with one chat model, you can switch to another chat model that is not rate-limited.
+1. リクエストの間隔を空けてレート制限の達成を回避する：チャットモデルは、初期化時に指定できる `rate_limiter` パラメータを受け入れます。このパラメータは、モデルプロバイダーへのリクエストのレートを制御するために使用されます。特定のモデルへのリクエストの間隔を空けることは、モデルのベンチマークを行いパフォーマンスを評価する際に特に有効な戦略です。この機能の使用方法の詳細については、[レート制限への対処方法](/docs/how_to/chat_model_rate_limiting/) をご覧ください。
+2. レート制限エラーからの回復を試みる：レート制限エラーが発生した場合、リクエストを再試行する前に一定時間待つことができます。レート制限エラーが発生するたびに、待機時間を増やすことができます。チャットモデルには、再試行回数を制御できる `max_retries` パラメータがあります。詳細については、[標準パラメータ](#standard-parameters) セクションを参照してください。
+3. 別のチャットモデルへのフォールバック: あるチャットモデルでレート制限に達した場合、レート制限のない別のチャットモデルに切り替えることができます。
 
-### Caching
+### キャッシュ
 
-Chat model APIs can be slow, so a natural question is whether to cache the results of previous conversations. Theoretically, caching can help improve performance by reducing the number of requests made to the model provider. In practice, caching chat model responses is a complex problem and should be approached with caution.
+チャットモデルAPIは遅くなる場合があるため、以前の会話の結果をキャッシュするかどうかという疑問が生じるのは当然です。理論的には、キャッシュはモデルプロバイダーへのリクエスト数を減らすことでパフォーマンスを向上させるのに役立ちます。しかし、実際には、チャットモデルのレスポンスのキャッシュは複雑な問題であり、慎重に検討する必要があります。
 
-The reason is that getting a cache hit is unlikely after the first or second interaction in a conversation if relying on caching the **exact** inputs into the model. For example, how likely do you think that multiple conversations start with the exact same message? What about the exact same three messages?
+その理由は、モデルへの**正確な**入力をキャッシュする場合、会話の1回目または2回目のインタラクション後にキャッシュヒットが発生する可能性は低いからです。例えば、複数の会話が全く同じメッセージで始まる可能性はどれくらいあるでしょうか？全く同じメッセージが3つある場合はどうでしょうか？
 
-An alternative approach is to use semantic caching, where you cache responses based on the meaning of the input rather than the exact input itself. This can be effective in some situations, but not in others.
+別の方法として、セマンティックキャッシュを使用する方法があります。これは、入力そのものそのものではなく、入力の意味に基づいてレスポンスをキャッシュするものです。これは状況によっては効果的ですが、そうでない場合もあります。
 
-A semantic cache introduces a dependency on another model on the critical path of your application (e.g., the semantic cache may rely on an [embedding model](/docs/concepts/embedding_models) to convert text to a vector representation), and it's not guaranteed to capture the meaning of the input accurately.
+セマンティックキャッシュは、アプリケーションのクリティカルパスにおいて別のモデルへの依存関係を導入します（例：セマンティックキャッシュは、テキストをベクター表現に変換するために[埋め込みモデル](/docs/concepts/embedding_models)に依存する場合があります）。また、入力の意味を正確に捉えられる保証はありません。
 
-However, there might be situations where caching chat model responses is beneficial. For example, if you have a chat model that is used to answer frequently asked questions, caching responses can help reduce the load on the model provider, costs, and improve response times.
+ただし、チャットモデルの応答をキャッシュすることが有益な状況もあります。例えば、よくある質問への回答に使用するチャットモデルがある場合、応答をキャッシュすることで、モデルプロバイダーの負荷とコストを軽減し、応答時間を短縮できます。
 
-Please see the [how to cache chat model responses](/docs/how_to/chat_model_caching/) guide for more details.
+詳細については、[チャットモデルの応答をキャッシュする方法](/docs/how_to/chat_model_caching/)ガイドをご覧ください。
 
-## Related resources
+## 関連リソース
 
-* How-to guides on using chat models: [how-to guides](/docs/how_to/#chat-models).
-* List of supported chat models: [chat model integrations](/docs/integrations/chat/).
+* チャットモデルの使用方法に関するガイド：[ハウツーガイド](/docs/how_to/#chat-models)。
+* サポートされているチャットモデルの一覧：[チャットモデル統合](/docs/integrations/chat/)。
 
-### Conceptual guides
+### 概念ガイド
 
-* [Messages](/docs/concepts/messages)
-* [Tool calling](/docs/concepts/tool_calling)
-* [Multimodality](/docs/concepts/multimodality)
-* [Structured outputs](/docs/concepts/structured_outputs)
-* [Tokens](/docs/concepts/tokens)
+* [メッセージ](/docs/concepts/messages)
+* [ツール呼び出し](/docs/concepts/tool_calling)
+* [マルチモダリティ](/docs/concepts/multimodality)
+* [構造化出力](/docs/concepts/structured_outputs)
+* [トークン](/docs/concepts/tokens)

@@ -4,110 +4,110 @@
 - [Chat Models](/docs/concepts/chat_models)
 :::
 
-## Overview
+## 概要
 
-Messages are the unit of communication in [chat models](/docs/concepts/chat_models). They are used to represent the input and output of a chat model, as well as any additional context or metadata that may be associated with a conversation.
+メッセージは、[チャットモデル](/docs/concepts/chat_models)におけるコミュニケーションの単位です。メッセージは、チャットモデルの入出力、および会話に関連付けられる追加のコンテキストやメタデータを表すために使用されます。
 
-Each message has a **role** (e.g., "user", "assistant") and **content** (e.g., text, multimodal data) with additional metadata that varies depending on the chat model provider.
+各メッセージには**役割**（例：ユーザー、アシスタント）と**コンテンツ**（例：テキスト、マルチモーダルデータ）があり、追加のメタデータはチャットモデルプロバイダーによって異なります。
 
-LangChain provides a unified message format that can be used across chat models, allowing users to work with different chat models without worrying about the specific details of the message format used by each model provider.
+LangChainは、複数のチャットモデルで使用できる統一されたメッセージ形式を提供します。これにより、ユーザーは各モデルプロバイダーが使用するメッセージ形式の詳細を気にすることなく、異なるチャットモデルを操作できます。
 
-## What is inside a message?
+## メッセージの内容
 
-A message typically consists of the following pieces of information:
+メッセージは通常、以下の情報で構成されます。
 
-- **Role**: The role of the message (e.g., "user", "assistant").
-- **Content**: The content of the message (e.g., text, multimodal data).
-- Additional metadata: id, name, [token usage](/docs/concepts/tokens) and other model-specific metadata.
+- **Role**: メッセージの役割（例：「ユーザー」、「アシスタント」）。
+- **Content**: メッセージの内容（例：テキスト、マルチモーダルデータ）。
+- 追加のメタデータ：ID、名前、[トークンの使用状況](/docs/concepts/tokens)、およびその他のモデル固有のメタデータ。
 
 ### Role
 
-Roles are used to distinguish between different types of messages in a conversation and help the chat model understand how to respond to a given sequence of messages.
+ロールは、会話内の異なるタイプのメッセージを区別するために使用され、チャット モデルが特定のメッセージ シーケンスにどのように応答するかを理解するのに役立ちます。
 
 | **Role**              | **Description**                                                                                                                                                                                                 |
 |-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **system**            | Used to tell the chat model how to behave and provide additional context. Not supported by all chat model providers.                                                                                            |
-| **user**              | Represents input from a user interacting with the model, usually in the form of text or other interactive input.                                                                                                |
-| **assistant**         | Represents a response from the model, which can include text or a request to invoke tools.                                                                                                                      |
-| **tool**              | A message used to pass the results of a tool invocation back to the model after external data or processing has been retrieved. Used with chat models that support [tool calling](/docs/concepts/tool_calling). |
-| **function** (legacy) | This is a legacy role, corresponding to OpenAI's legacy function-calling API. **tool** role should be used instead.                                                                                             |
+| **system**            | チャットモデルの動作を指示し、追加のコンテキストを提供するために使用されます。すべてのチャットモデルプロバイダーでサポートされているわけではありません。|
+| **user**              | 通常はテキストまたはその他の対話型入力の形式で、モデルと対話するユーザーからの入力を表します。|
+| **assistant**         | モデルからの応答を表します。これには、テキストやツールを呼び出す要求が含まれます。|
+| **tool**              | 外部データまたは処理を取得した後、ツール呼び出しの結果をモデルに返すために使用されるメッセージです。[ツール呼び出し](/docs/concepts/tool_calling)をサポートするチャットモデルで使用されます。|
+| **function** (legacy) | これは、OpenAI のレガシー関数呼び出し API に対応するレガシー ロールです。代わりに **tool** ロールを使用する必要があります。|
 
 ### Content
 
-The content of a message text or a list of dictionaries representing [multimodal data](/docs/concepts/multimodality) (e.g., images, audio, video). The exact format of the content can vary between different chat model providers.
+メッセージテキストの内容、または[マルチモーダルデータ](/docs/concepts/multimodality)（画像、音声、動画など）を表す辞書のリスト。コンテンツの正確な形式は、チャットモデルプロバイダーによって異なります。
 
-Currently, most chat models support text as the primary content type, with some models also supporting multimodal data. However, support for multimodal data is still limited across most chat model providers.
+現在、ほとんどのチャットモデルは主要なコンテンツタイプとしてテキストをサポートしており、一部のモデルはマルチモーダルデータもサポートしています。ただし、ほとんどのチャットモデルプロバイダーでは、マルチモーダルデータのサポートは依然として限定的です。
 
-For more information see:
-* [SystemMessage](#systemmessage) -- for content which should be passed to direct the conversation
-* [HumanMessage](#humanmessage) -- for content in the input from the user.
-* [AIMessage](#aimessage) -- for content in the response from the model.
-* [Multimodality](/docs/concepts/multimodality) -- for more information on multimodal content.
+詳細については、以下を参照してください。
+* [SystemMessage](#systemmessage) -- 会話を方向付けるために渡すコンテンツ
+* [HumanMessage](#humanmessage) -- ユーザーからの入力に含まれるコンテンツ
+* [AIMessage](#aimessage) -- モデルからの応答に含まれるコンテンツ
+* [Multimodality](/docs/concepts/multimodality) -- マルチモーダルコンテンツの詳細については、以下を参照してください。
 
-### Other Message Data
+### その他のメッセージデータ
 
-Depending on the chat model provider, messages can include other data such as:
+チャットモデルプロバイダーによっては、メッセージに以下のようなデータが含まれる場合があります。
 
-- **ID**: An optional unique identifier for the message.
-- **Name**: An optional `name` property which allows differentiate between different entities/speakers with the same role. Not all models support this!
-- **Metadata**: Additional information about the message, such as timestamps, token usage, etc.
-- **Tool Calls**: A request made by the model to call one or more tools> See [tool calling](/docs/concepts/tool_calling) for more information.
+- **ID**: メッセージの一意の識別子（オプション）。
+- **Name**: 同じ役割を持つ異なるエンティティ/スピーカーを区別するための、オプションの `name` プロパティ。すべてのモデルでサポートされているわけではありません。
+- **Metadata**: タイムスタンプ、トークンの使用状況など、メッセージに関する追加情報。
+- **Tool Calls**: モデルが1つ以上のツールを呼び出すためのリクエスト。詳細については、[ツール呼び出し](/docs/concepts/tool_calling) を参照してください。
 
-## Conversation Structure
+## 会話構造
 
-The sequence of messages into a chat model should follow a specific structure to ensure that the chat model can generate a valid response.
+チャットモデルへのメッセージの順序は、チャットモデルが有効な応答を生成できるように、特定の構造に従う必要があります。
 
-For example, a typical conversation structure might look like this:
+例えば、典型的な会話構造は次のようになります。
 
-1. **User Message**: "Hello, how are you?"
-2. **Assistant Message**: "I'm doing well, thank you for asking."
-3. **User Message**: "Can you tell me a joke?"
-4. **Assistant Message**: "Sure! Why did the scarecrow win an award? Because he was outstanding in his field!"
+1. **ユーザーメッセージ**: 「こんにちは、お元気ですか？」
+2. **アシスタントメッセージ**: 「元気です。ありがとうございます。」
+3. **ユーザーメッセージ**: 「ジョークを言ってもらえますか？」
+4. **アシスタントメッセージ**: 「もちろんです！かかしがなぜ賞を受賞したのですか？ それは、彼がその分野で傑出していたからです！」
 
-Please read the [chat history](/docs/concepts/chat_history) guide for more information on managing chat history and ensuring that the conversation structure is correct.
+チャット履歴の管理と会話構造の正確性を確認する方法の詳細については、[チャット履歴](/docs/concepts/chat_history)ガイドをご覧ください。
 
-## LangChain Messages
+## LangChain メッセージ
 
-LangChain provides a unified message format that can be used across all chat models, allowing users to work with different chat models without worrying about the specific details of the message format used by each model provider.
+LangChain は、すべてのチャットモデルで使用できる統一されたメッセージ形式を提供します。これにより、ユーザーは各モデルプロバイダーが使用するメッセージ形式の詳細を気にすることなく、さまざまなチャットモデルを操作できます。
 
-LangChain messages are Python objects that subclass from a [BaseMessage](https://python.langchain.com/api_reference/core/messages/langchain_core.messages.base.BaseMessage.html).
+LangChain メッセージは、[BaseMessage](https://python.langchain.com/api_reference/core/messages/langchain_core.messages.base.BaseMessage.html) のサブクラスである Python オブジェクトです。
 
-The five main message types are:
+主なメッセージタイプは5つあります。
 
-- [SystemMessage](#systemmessage): corresponds to **system** role
-- [HumanMessage](#humanmessage): corresponds to **user** role
-- [AIMessage](#aimessage): corresponds to **assistant** role
-- [AIMessageChunk](#aimessagechunk): corresponds to **assistant** role, used for [streaming](/docs/concepts/streaming) responses
-- [ToolMessage](#toolmessage): corresponds to **tool** role
+- [SystemMessage](#systemmessage): **system** ロールに対応します。
+- [HumanMessage](#humanmessage): **user** ロールに対応します。
+- [AIMessage](#aimessage): **assistant** ロールに対応します。
+- [AIMessageChunk](#aimessagechunk): **assistant** ロールに対応し、[streaming](/docs/concepts/streaming) レスポンスに使用されます。
+- [ToolMessage](#toolmessage): **tool** ロールに対応します。
 
-Other important messages include:
+その他の重要なメッセージは次のとおりです。
 
-- [RemoveMessage](#removemessage) -- does not correspond to any role. This is an abstraction, mostly used in [LangGraph](/docs/concepts/architecture#langgraph) to manage chat history.
-- **Legacy** [FunctionMessage](#legacy-functionmessage): corresponds to the **function** role in OpenAI's **legacy** function-calling API.
+- [RemoveMessage](#removemessage) -- どのロールにも対応しません。これは抽象化であり、主に [LangGraph](/docs/concepts/architecture#langgraph) でチャット履歴を管理するために使用されます。
+- **Legacy** [FunctionMessage](#legacy-functionmessage): OpenAI の **legacy** 関数呼び出し API の **function** ロールに対応します。
 
-You can find more information about **messages** in the [API Reference](https://python.langchain.com/api_reference/core/messages.html).
+**メッセージ** の詳細については、[API リファレンス](https://python.langchain.com/api_reference/core/messages.html) を参照してください。
 
 ### SystemMessage
 
-A `SystemMessage` is used to prime the behavior of the AI model and provide additional context, such as instructing the model to adopt a specific persona or setting the tone of the conversation (e.g., "This is a conversation about cooking").
+`SystemMessage` は、AI モデルの動作を準備し、特定のペルソナを採用するようモデルに指示したり、会話のトーンを設定したりするなど、追加のコンテキストを提供するために使用されます（例: 「これは料理に関する会話です」）。
 
-Different chat providers may support system message in one of the following ways:
+チャットプロバイダーによって、システムメッセージのサポート方法は異なります。
 
-* **Through a "system" message role**: In this case, a system message is included as part of the message sequence with the role explicitly set as "system."
-* **Through a separate API parameter for system instructions**: Instead of being included as a message, system instructions are passed via a dedicated API parameter.
-* **No support for system messages**: Some models do not support system messages at all.
+* **「システム」メッセージロール経由**：この場合、システムメッセージはメッセージシーケンスの一部として含まれ、ロールは明示的に「システム」に設定されます。
+* **システム指示用の個別の API パラメータ経由**：システム指示はメッセージとして含まれるのではなく、専用の API パラメータを介して渡されます。
+* **システムメッセージはサポートされていません**：一部のモデルでは、システムメッセージが全くサポートされていません。
 
-Most major chat model providers support system instructions via either a chat message or a separate API parameter. LangChain will automatically adapt based on the provider’s capabilities. If the provider supports a separate API parameter for system instructions, LangChain will extract the content of a system message and pass it through that parameter.
+主要なチャットモデルプロバイダーのほとんどは、チャットメッセージまたは個別の API パラメータを介してシステム指示をサポートしています。LangChain はプロバイダーの機能に応じて自動的に適応します。プロバイダーがシステム指示用の個別の API パラメータをサポートしている場合、LangChain はシステムメッセージの内容を抽出し、そのパラメータを介して渡します。
 
-If no system message is supported by the provider, in most cases LangChain will attempt to incorporate the system message's content into a HumanMessage or raise an exception if that is not possible. However, this behavior is not yet consistently enforced across all implementations, and if using a less popular implementation of a chat model (e.g., an implementation from the `langchain-community` package) it is recommended to check the specific documentation for that model.
+プロバイダーがシステムメッセージをサポートしていない場合、ほとんどの場合、LangChainはシステムメッセージの内容をHumanMessageに組み込もうと試みるか、それが不可能な場合は例外を発生させます。ただし、この動作はまだすべての実装で一貫して適用されているわけではありません。あまり一般的ではないチャットモデルの実装（例えば、`langchain-community`パッケージの実装）を使用する場合は、そのモデルの特定のドキュメントを確認することをお勧めします。
 
 ### HumanMessage
 
-The `HumanMessage` corresponds to the **"user"** role. A human message represents input from a user interacting with the model.
+`HumanMessage` は **「ユーザー」** ロールに対応します。ヒューマンメッセージは、モデルと対話するユーザーからの入力を表します。
 
-#### Text Content
+#### テキストコンテンツ
 
-Most chat models expect the user input to be in the form of text.
+ほとんどのチャット モデルでは、ユーザー入力がテキスト形式であることが想定されています。
 
 ```python
 from langchain_core.messages import HumanMessage
@@ -116,22 +116,22 @@ model.invoke([HumanMessage(content="Hello, how are you?")])
 ```
 
 :::tip
-When invoking a chat model with a string as input, LangChain will automatically convert the string into a `HumanMessage` object. This is mostly useful for quick testing.
+文字列を入力としてチャットモデルを呼び出すと、LangChainは自動的にその文字列を`HumanMessage`オブジェクトに変換します。これは主に簡単なテストに役立ちます。
 
 ```python
 model.invoke("Hello, how are you?")
 ```
 :::
 
-#### Multi-modal Content
+#### マルチモーダルコンテンツ
 
-Some chat models accept multimodal inputs, such as images, audio, video, or files like PDFs.
+一部のチャットモデルは、画像、音声、動画、PDFなどのファイルなど、マルチモーダルな入力を受け付けます。
 
-Please see the [multimodality](/docs/concepts/multimodality) guide for more information.
+詳しくは、[マルチモーダル](/docs/concepts/multimodality)ガイドをご覧ください。
 
 ### AIMessage
 
-`AIMessage` is used to represent a message with the role **"assistant"**. This is the response from the model, which can include text or a request to invoke tools. It could also include other media types like images, audio, or video -- though this is still uncommon at the moment.
+`AIMessage` は、**"assistant"** の役割を持つメッセージを表すために使用されます。これはモデルからの応答であり、テキストやツールの呼び出しリクエストを含めることができます。また、画像、音声、動画といった他のメディアタイプを含めることもできますが、現時点ではまだ一般的ではありません。
 
 ```python
 from langchain_core.messages import HumanMessage
@@ -139,53 +139,51 @@ ai_message = model.invoke([HumanMessage("Tell me a joke")])
 ai_message # <-- AIMessage
 ```
 
-An `AIMessage` has the following attributes. The attributes which are **standardized** are the ones that LangChain attempts to standardize across different chat model providers. **raw** fields are specific to the model provider and may vary.
+`AIMessage` には以下の属性があります。**標準化** された属性は、LangChain がさまざまなチャットモデルプロバイダー間で標準化しようとしている属性です。**raw** フィールドはモデルプロバイダーに固有であり、異なる場合があります。
 
 | Attribute            | Standardized/Raw | Description                                                                                                                                                                                                             |
 |----------------------|:-----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `content`            | Raw              | Usually a string, but can be a list of content blocks. See [content](#content) for details.                                                                                                                             |
-| `tool_calls`         | Standardized     | Tool calls associated with the message. See [tool calling](/docs/concepts/tool_calling) for details.                                                                                                                    |
-| `invalid_tool_calls` | Standardized     | Tool calls with parsing errors associated with the message. See [tool calling](/docs/concepts/tool_calling) for details.                                                                                                |
-| `usage_metadata`     | Standardized     | Usage metadata for a message, such as [token counts](/docs/concepts/tokens). See [Usage Metadata API Reference](https://python.langchain.com/api_reference/core/messages/langchain_core.messages.ai.UsageMetadata.html). |
-| `id`                 | Standardized     | An optional unique identifier for the message, ideally provided by the provider/model that created the message.                                                                                                         |
-| `response_metadata`  | Raw              | Response metadata, e.g., response headers, logprobs, token counts.                                                                                                                                                      |
+| `content`            | Raw              | 通常は文字列ですが、コンテンツブロックのリストを指定することもできます。詳細は[content](#content)を参照してください。|
+| `tool_calls`         | Standardized     | メッセージに関連付けられたツール呼び出し。詳細については[ツール呼び出し](/docs/concepts/tool_calling)をご覧ください。|
+| `invalid_tool_calls` | Standardized     | メッセージに関連する解析エラーのあるツール呼び出し。詳細は[ツール呼び出し](/docs/concepts/tool_calling)をご覧ください。 |
+| `usage_metadata`     | Standardized     | メッセージの使用状況メタデータ（[トークン数](/docs/concepts/tokens)など）。[使用状況メタデータAPIリファレンス](https://python.langchain.com/api_reference/core/messages/langchain_core.messages.ai.UsageMetadata.html)を参照してください。|
+| `id`                 | Standardized     | メッセージのオプションの一意の識別子。理想的には、メッセージを作成したプロバイダー/モデルによって提供されます。 |
+| `response_metadata`  | Raw              | 応答メタデータ (応答ヘッダー、logprob、トークン数など)。|
 
-#### content
+#### コンテンツ
 
-The **content** property of an `AIMessage` represents the response generated by the chat model.
+`AIMessage` の **content** プロパティは、チャットモデルによって生成されたレスポンスを表します。
 
-The content is either:
+コンテンツは次のいずれかです。
 
-- **text** -- the norm for virtually all chat models.
-- A **list of dictionaries** -- Each dictionary represents a content block and is associated with a `type`.
-    * Used by Anthropic for surfacing agent thought process when doing [tool calling](/docs/concepts/tool_calling).
-    * Used by OpenAI for audio outputs. Please see [multi-modal content](/docs/concepts/multimodality) for more information.
+- **text** -- ほぼすべてのチャットモデルで標準です。
+- **辞書のリスト** -- 各辞書はコンテンツブロックを表し、`type` に関連付けられています。
+    * Anthropic が [ツール呼び出し](/docs/concepts/tool_calling) を行う際にエージェントの思考プロセスを表面化させるために使用されます。
+    * OpenAI が音声出力に使用します。詳細については、[マルチモーダルコンテンツ](/docs/concepts/multimodality) を参照してください。
 
 :::important
-The **content** property is **not** standardized across different chat model providers, mostly because there are
-still few examples to generalize from.
+**content** プロパティは、さまざまなチャットモデルプロバイダー間で標準化されていません。これは主に、一般化できる例がまだ少ないためです。
 :::
 
 ### AIMessageChunk
 
-It is common to [stream](/docs/concepts/streaming) responses for the chat model as they are being generated, so the user can see the response in real-time instead of waiting for the entire response to be generated before displaying it.
+チャットモデルでは、レスポンスが生成されると同時に[ストリーミング](/docs/concepts/streaming)するのが一般的です。これにより、ユーザーはレスポンス全体が生成されるまで待つことなく、リアルタイムでレスポンスを確認できます。
 
-It is returned from the `stream`, `astream` and `astream_events` methods of the chat model.
+これは、チャットモデルの `stream`、`astream`、`astream_events` メソッドから返されます。
 
-For example,
+例えば、
 
 ```python
 for chunk in model.stream([HumanMessage("what color is the sky?")]):
     print(chunk)
 ```
 
-`AIMessageChunk` follows nearly the same structure as `AIMessage`, but uses a different [ToolCallChunk](https://python.langchain.com/api_reference/core/messages/langchain_core.messages.tool.ToolCallChunk.html#langchain_core.messages.tool.ToolCallChunk)
-to be able to stream tool calling in a standardized manner.
+`AIMessageChunk` は `AIMessage` とほぼ同じ構造に従いますが、ツール呼び出しを標準化された方法でストリーミングできるように、異なる [ToolCallChunk](https://python.langchain.com/api_reference/core/messages/langchain_core.messages.tool.ToolCallChunk.html#langchain_core.messages.tool.ToolCallChunk) を使用します。
 
 
-#### Aggregating
+#### 集約
 
-`AIMessageChunks` support the `+` operator to merge them into a single `AIMessage`. This is useful when you want to display the final response to the user.
+`AIMessageChunks` は `+` 演算子をサポートしており、複数のチャンクを 1 つの `AIMessage` に結合できます。これは、最終的なレスポンスをユーザーに表示したい場合に便利です。
 
 ```python
 ai_message = chunk1 + chunk2 + chunk3 + ...
@@ -193,32 +191,32 @@ ai_message = chunk1 + chunk2 + chunk3 + ...
 
 ### ToolMessage
 
-This represents a message with role "tool", which contains the result of [calling a tool](/docs/concepts/tool_calling). In addition to `role` and `content`, this message has:
+これは、役割が「ツール」であるメッセージを表し、[ツールの呼び出し](/docs/concepts/tool_calling)の結果が含まれます。`role` と `content` に加えて、このメッセージには以下の要素が含まれます。
 
-- a `tool_call_id` field which conveys the id of the call to the tool that was called to produce this result.
-- an `artifact` field which can be used to pass along arbitrary artifacts of the tool execution which are useful to track but which should not be sent to the model.
+- `tool_call_id` フィールド: この結果を生成するために呼び出されたツールの呼び出しIDを伝えます。
+- `artifact` フィールド: ツール実行時に追跡に有用だがモデルには送信すべきではない任意のアーティファクトを渡すために使用できます。
 
-Please see [tool calling](/docs/concepts/tool_calling) for more information.
+詳細については、[ツールの呼び出し](/docs/concepts/tool_calling) を参照してください。
 
 ### RemoveMessage
 
-This is a special message type that does not correspond to any roles. It is used
-for managing chat history in [LangGraph](/docs/concepts/architecture#langgraph).
+これは、どのロールにも該当しない特別なメッセージタイプです。
+[LangGraph](/docs/concepts/architecture#langgraph) でチャット履歴を管理するために使用されます。
 
-Please see the following for more information on how to use the `RemoveMessage`:
+`RemoveMessage` の使用方法の詳細については、以下をご覧ください。
 
-* [Memory conceptual guide](https://langchain-ai.github.io/langgraph/concepts/memory/)
-* [How to delete messages](https://langchain-ai.github.io/langgraph/how-tos/memory/delete-messages/)
+* [メモリ概念ガイド](https://langchain-ai.github.io/langgraph/concepts/memory/)
+* [メッセージの削除方法](https://langchain-ai.github.io/langgraph/how-tos/memory/delete-messages/)
 
 ### (Legacy) FunctionMessage
 
-This is a legacy message type, corresponding to OpenAI's legacy function-calling API. `ToolMessage` should be used instead to correspond to the updated tool-calling API.
+これは、OpenAI の従来の関数呼び出し API に対応するレガシー メッセージ タイプです。更新されたツール呼び出し API に対応するには、代わりに `ToolMessage` を使用する必要があります。
 
 ## OpenAI Format
 
 ### Inputs
 
-Chat models also accept OpenAI's format as **inputs** to chat models:
+チャット モデルは、チャット モデルへの **入力** として OpenAI の形式も受け入れます:
 
 ```python
 chat_model.invoke([
@@ -237,9 +235,8 @@ chat_model.invoke([
 ])
 ```
 
-### Outputs
+### 出力
 
-At the moment, the output of the model will be in terms of LangChain messages, so you will need to convert the output to the OpenAI format if you
-need OpenAI format for the output as well.
+現時点では、モデルの出力はLangChainメッセージ形式となります。出力にもOpenAI形式が必要な場合は、出力をOpenAI形式に変換する必要があります。
 
-The [convert_to_openai_messages](https://python.langchain.com/api_reference/core/messages/langchain_core.messages.utils.convert_to_openai_messages.html) utility function can be used to convert from LangChain messages to OpenAI format.
+[convert_to_openai_messages](https://python.langchain.com/api_reference/core/messages/langchain_core.messages.utils.convert_to_openai_messages.html)ユーティリティ関数を使用すると、LangChainメッセージをOpenAI形式に変換できます。

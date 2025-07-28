@@ -1,87 +1,85 @@
-# Runnable interface
+# Runnable インターフェース
 
-The Runnable interface is the foundation for working with LangChain components, and it's implemented across many of them, such as [language models](/docs/concepts/chat_models), [output parsers](/docs/concepts/output_parsers), [retrievers](/docs/concepts/retrievers), [compiled LangGraph graphs](
-https://langchain-ai.github.io/langgraph/concepts/low_level/#compiling-your-graph) and more.
+Runnable インターフェースは、LangChain コンポーネントを操作するための基盤であり、[言語モデル](/docs/concepts/chat_models)、[出力パーサー](/docs/concepts/output_parsers)、[リトリーバー](/docs/concepts/retrievers)、[コンパイル済み LangGraph グラフ](
+https://langchain-ai.github.io/langgraph/concepts/low_level/#compiling-your-graph) など、多くの LangChain コンポーネントに実装されています。
 
-This guide covers the main concepts and methods of the Runnable interface, which allows developers to interact with various LangChain components in a consistent and predictable manner.
+このガイドでは、開発者がさまざまな LangChain コンポーネントを一貫性と予測可能な方法で操作できるようにする Runnable インターフェースの主要な概念とメソッドについて説明します。
 
-:::info Related Resources
-* The ["Runnable" Interface API Reference](https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable) provides a detailed overview of the Runnable interface and its methods.
-* A list of built-in `Runnables` can be found in the [LangChain Core API Reference](https://python.langchain.com/api_reference/core/runnables.html). Many of these Runnables are useful when composing custom "chains" in LangChain using the [LangChain Expression Language (LCEL)](/docs/concepts/lcel).
+:::info 関連リソース
+* ["Runnable" インターフェース API リファレンス](https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable) では、Runnable インターフェースとそのメソッドの詳細な概要が提供されています。
+* 組み込みの `Runnable` の一覧は、[LangChain Core API リファレンス](https://python.langchain.com/api_reference/core/runnables.html) に記載されています。これらの Runnable の多くは、[LangChain Expression Language (LCEL)](/docs/concepts/lcel) を使用して LangChain でカスタムの「チェーン」を作成する際に役立ちます。
 :::
 
-## Overview of runnable interface
+## Runnable インターフェースの概要
 
-The Runnable way defines a standard interface that allows a Runnable component to be:
+Runnable の方法は、Runnable コンポーネントで以下の処理を可能にする標準インターフェースを定義します。
 
-* [Invoked](/docs/how_to/lcel_cheatsheet/#invoke-a-runnable): A single input is transformed into an output.
-* [Batched](/docs/how_to/lcel_cheatsheet/#batch-a-runnable): Multiple inputs are efficiently transformed into outputs.
-* [Streamed](/docs/how_to/lcel_cheatsheet/#stream-a-runnable): Outputs are streamed as they are produced.
-* Inspected: Schematic information about Runnable's input, output, and configuration can be accessed.
-* Composed: Multiple Runnables can be composed to work together using [the LangChain Expression Language (LCEL)](/docs/concepts/lcel) to create complex pipelines.
+* [呼び出し](/docs/how_to/lcel_cheatsheet/#invoke-a-runnable): 単一の入力を出力に変換します。
+* [バッチ処理](/docs/how_to/lcel_cheatsheet/#batch-a-runnable): 複数の入力を効率的に出力に変換します。
+* [ストリーミング](/docs/how_to/lcel_cheatsheet/#stream-a-runnable): 出力は生成された時点でストリーミングされます。
+* 検査: Runnable の入力、出力、および構成に関するスキーマ情報にアクセスできます。
+* 合成: [LangChain Expression Language (LCEL)](/docs/concepts/lcel) を使用して複数の Runnable を合成し、連携させることで複雑なパイプラインを作成できます。
 
-Please review the [LCEL Cheatsheet](/docs/how_to/lcel_cheatsheet) for some common patterns that involve the Runnable interface and LCEL expressions.
+Runnable インターフェースと LCEL 式に関連する一般的なパターンについては、[LCEL チートシート](/docs/how_to/lcel_cheatsheet) を確認してください。
 
 <a id="batch"></a>
 ### Optimized parallel execution (batch)
 <span data-heading-keywords="batch"></span>
 
-LangChain Runnables offer a built-in `batch` (and `batch_as_completed`) API that allow you to process multiple inputs in parallel.
+LangChain Runnables は、複数の入力を並列処理できる組み込みの `batch` API（および `batch_as_completed` API）を提供しています。
 
-Using these methods can significantly improve performance when needing to process multiple independent inputs, as the
-processing can be done in parallel instead of sequentially.
+これらのメソッドを使用すると、複数の独立した入力を処理する必要がある場合に、処理を順次ではなく並列に実行できるため、パフォーマンスを大幅に向上させることができます。
 
-The two batching options are:
+2 つのバッチ処理オプションは次のとおりです。
 
-* `batch`: Process multiple inputs in parallel, returning results in the same order as the inputs.
-* `batch_as_completed`: Process multiple inputs in parallel, returning results as they complete. Results may arrive out of order, but each includes the input index for matching.
+* `batch`: 複数の入力を並列処理し、入力と同じ順序で結果を返します。
+* `batch_as_completed`: 複数の入力を並列処理し、完了した時点で結果を返します。結果は順序どおりに返されない場合がありますが、各結果にはマッチング用の入力インデックスが含まれます。
 
-The default implementation of `batch` and `batch_as_completed` use a thread pool executor to run the `invoke` method in parallel. This allows for efficient parallel execution without the need for users to manage threads, and speeds up code that is I/O-bound (e.g., making API requests, reading files, etc.). It will not be as effective for CPU-bound operations, as the GIL (Global Interpreter Lock) in Python will prevent true parallel execution.
+`batch` および `batch_as_completed` のデフォルト実装では、スレッドプール executor を使用して `invoke` メソッドを並列実行します。これにより、ユーザーがスレッドを管理する必要なく効率的な並列実行が可能になり、I/O 依存のコード（API リクエストの発行、ファイルの読み取りなど）を高速化できます。 Python の GIL (Global Interpreter Lock) が真の並列実行を妨げるため、CPU バウンドの操作にはそれほど効果的ではありません。
 
-Some Runnables may provide their own implementations of `batch` and `batch_as_completed` that are optimized for their specific use case (e.g.,
-rely on a `batch` API provided by a model provider).
+一部の Runnable は、特定のユースケース向けに最適化された独自の `batch` および `batch_as_completed` 実装を提供する場合があります (例: モデルプロバイダーが提供する `batch` API を利用する)。
 
 :::note
-The async versions of `abatch` and `abatch_as_completed` relies on asyncio's [gather](https://docs.python.org/3/library/asyncio-task.html#asyncio.gather) and [as_completed](https://docs.python.org/3/library/asyncio-task.html#asyncio.as_completed) functions to run the `ainvoke` method in parallel.
+`abatch` と `abatch_as_completed` の非同期バージョンは、asyncio の [gather](https://docs.python.org/3/library/asyncio-task.html#asyncio.gather) および [as_completed](https://docs.python.org/3/library/asyncio-task.html#asyncio.as_completed) 関数に依存して、`ainvoke` メソッドを並列に実行します。
 :::
 
 :::tip
-When processing a large number of inputs using `batch` or `batch_as_completed`, users may want to control the maximum number of parallel calls. This can be done by setting the `max_concurrency` attribute in the `RunnableConfig` dictionary. See the [RunnableConfig](/docs/concepts/runnables/#runnableconfig) for more information.
+`batch` または `batch_as_completed` を使用して大量の入力を処理する場合、並列呼び出しの最大数を制御したい場合があります。これは、`RunnableConfig` ディクショナリの `max_concurrency` 属性を設定することで実現できます。詳細については、[RunnableConfig](/docs/concepts/runnables/#runnableconfig) を参照してください。
 
-Chat Models also have a built-in [rate limiter](/docs/concepts/chat_models#rate-limiting) that can be used to control the rate at which requests are made.
+チャットモデルには、リクエストのレートを制御できる組み込みの [レートリミッター](/docs/concepts/chat_models#rate-limiting) も備わっています。
 :::
 
 ### Asynchronous support
 <span data-heading-keywords="async-api"></span>
 
-Runnables expose an asynchronous API, allowing them to be called using the `await` syntax in Python. Asynchronous methods can be identified by the "a" prefix (e.g., `ainvoke`, `abatch`, `astream`, `abatch_as_completed`).
+Runnable は非同期 API を公開しており、Python の `await` 構文を使用して呼び出すことができます。非同期メソッドは "a" プレフィックスで識別されます（例: `ainvoke`、`abatch`、`astream`、`abatch_as_completed`）。
 
-Please refer to the [Async Programming with LangChain](/docs/concepts/async) guide for more details.
+詳細については、[LangChain を使用した非同期プログラミング](/docs/concepts/async) ガイドを参照してください。
 
 ## Streaming APIs
 <span data-heading-keywords="streaming-api"></span>
 
-Streaming is critical in making applications based on LLMs feel responsive to end-users.
+LLM ベースのアプリケーションをエンドユーザーにとって応答性の高いものにするには、ストリーミングが不可欠です。
 
-Runnables expose the following three streaming APIs:
+Runnable は次の 3 つのストリーミング API を公開します。
 
-1. sync [stream](https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.stream) and async [astream](https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.astream): yields the output a Runnable as it is generated.
-2. The async `astream_events`: a more advanced streaming API that allows streaming intermediate steps and final output
-3. The **legacy** async `astream_log`: a legacy streaming API that streams intermediate steps and final output
+1. sync [stream](https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.stream) と async [astream](https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.astream): 生成された Runnable をそのまま出力します。
+2. 非同期 `astream_events`: 中間ステップと最終出力をストリーミングできる、より高度なストリーミングAPI
+3. **レガシー** 非同期 `astream_log`: 中間ステップと最終出力をストリーミングするレガシーストリーミングAPI
 
-Please refer to the [Streaming Conceptual Guide](/docs/concepts/streaming) for more details on how to stream in LangChain.
+LangChainでのストリーミング方法の詳細については、[ストリーミング概念ガイド](/docs/concepts/streaming)を参照してください。
 
-## Input and output types
+## 入力と出力の型
 
-Every `Runnable` is characterized by an input and output type. These input and output types can be any Python object, and are defined by the Runnable itself.
+すべての `Runnable` は、入力と出力の型によって特徴付けられます。これらの入力と出力の型は任意の Python オブジェクトにすることができ、Runnable 自体によって定義されます。
 
-Runnable methods that result in the execution of the Runnable (e.g., `invoke`, `batch`, `stream`, `astream_events`) work with these input and output types.
+Runnable の実行につながる Runnable メソッド (例: `invoke`、`batch`、`stream`、`astream_events`) は、これらの入力と出力の型で動作します。
 
-* invoke: Accepts an input and returns an output.
-* batch: Accepts a list of inputs and returns a list of outputs.
-* stream: Accepts an input and returns a generator that yields outputs.
+* invoke: 入力を受け取り、出力を返します。
+* batch: 入力のリストを受け取り、出力のリストを返します。
+* stream: 入力を受け取り、出力を生成するジェネレーターを返します。
 
-The **input type** and **output type** vary by component:
+**入力型** と **出力型** はコンポーネントによって異なります。
 
 | Component    | Input Type                                       | Output Type           |
 |--------------|--------------------------------------------------|-----------------------|
@@ -92,29 +90,28 @@ The **input type** and **output type** vary by component:
 | Retriever    | a string                                         | List of Documents     |
 | Tool         | a string or dictionary, depending on the tool    | Depends on the tool   |
 
-Please refer to the individual component documentation for more information on the input and output types and how to use them.
+入力と出力のタイプとその使用方法の詳細については、個々のコンポーネントのドキュメントを参照してください。
 
-### Inspecting schemas
+### スキーマの検査
 
 :::note
-This is an advanced feature that is unnecessary for most users. You should probably
-skip this section unless you have a specific need to inspect the schema of a Runnable.
+これは高度な機能ですが、ほとんどのユーザーには不要です。
+Runnableのスキーマを検査する必要がある場合を除き、このセクションはスキップすることをお勧めします。
 :::
 
-In more advanced use cases, you may want to programmatically **inspect** the Runnable and determine what input and output types the Runnable expects and produces.
+より高度なユースケースでは、Runnable をプログラムで **検査** し、Runnable が期待する入出力タイプと生成する入出力タイプを判断することが必要な場合があります。
 
-The Runnable interface provides methods to get the [JSON Schema](https://json-schema.org/) of the input and output types of a Runnable, as well as [Pydantic schemas](https://docs.pydantic.dev/latest/) for the input and output types.
+Runnable インターフェースは、Runnable の入出力タイプの [JSON スキーマ](https://json-schema.org/) と、入出力タイプの [Pydantic スキーマ](https://docs.pydantic.dev/latest/) を取得するためのメソッドを提供します。
 
-These APIs are mostly used internally for unit-testing and by [LangServe](/docs/concepts/architecture#langserve) which uses the APIs for input validation and generation of [OpenAPI documentation](https://www.openapis.org/).
+これらの API は主に、ユニットテストの内部処理や、入力検証や [OpenAPI ドキュメント](https://www.openapis.org/) の生成に API を使用する [LangServe](/docs/concepts/architecture#langserve) によって使用されます。
 
-In addition, to the input and output types, some Runnables have been set up with additional run time configuration options. 
-There are corresponding APIs to get the Pydantic Schema and JSON Schema of the configuration options for the Runnable.
-Please see the [Configurable Runnables](#configurable-runnables) section for more information.
+さらに、入出力タイプに加えて、一部の Runnable では追加の実行時構成オプションが設定されています。
+Runnable の構成オプションの Pydantic スキーマと JSON スキーマを取得するための API も用意されています。詳細については、[構成可能なランナブル](#configurable-runnables)セクションを参照してください。
 
 | Method                  | Description                                                      |
 |-------------------------|------------------------------------------------------------------|
 | `get_input_schema`      | Gives the Pydantic Schema of the input schema for the Runnable.  |
-| `get_output_schema`      | Gives the Pydantic Schema of the output schema for the Runnable. |
+| `get_output_schema`     | Gives the Pydantic Schema of the output schema for the Runnable. |
 | `config_schema`         | Gives the Pydantic Schema of the config schema for the Runnable. |
 | `get_input_jsonschema`  | Gives the JSONSchema of the input schema for the Runnable.       |
 | `get_output_jsonschema` | Gives the JSONSchema of the output schema for the Runnable.      |
@@ -123,31 +120,28 @@ Please see the [Configurable Runnables](#configurable-runnables) section for mor
 
 #### With_types
 
-LangChain will automatically try to infer the input and output types of a Runnable based on available information.
+LangChainは、利用可能な情報に基づいて、Runnableの入力型と出力型を自動的に推論します。
 
-Currently, this inference does not work well for more complex Runnables that are built using [LCEL](/docs/concepts/lcel) composition, and the inferred input and / or output types may be incorrect. In these cases, we recommend that users override the inferred input and output types using the `with_types` method ([API Reference](https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.with_types
-)).
+現在、この推論は[LCEL](/docs/concepts/lcel)コンポジションを使用して構築された複雑なRunnableでは適切に機能せず、推論された入力型や出力型が正しくない可能性があります。このような場合は、推論された入力型と出力型を`with_types`メソッド（[APIリファレンス](https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.base.Runnable.html#langchain_core.runnables.base.Runnable.with_types)）を使用してオーバーライドすることをお勧めします。
 
 ## RunnableConfig
 
-Any of the methods that are used to execute the runnable (e.g., `invoke`, `batch`, `stream`, `astream_events`) accept a second argument called
-`RunnableConfig` ([API Reference](https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.config.RunnableConfig.html#RunnableConfig)). This argument is a dictionary that contains configuration for the Runnable that will be used
-at run time during the execution of the runnable.
+runnable の実行に使用されるメソッド（例：`invoke`、`batch`、`stream`、`astream_events`）はいずれも、`RunnableConfig` と呼ばれる2番目の引数を受け入れます（[APIリファレンス](https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.config.RunnableConfig.html#RunnableConfig)）。この引数は、runnable の実行時に使用される runnable の設定を含むディクショナリです。
 
-A `RunnableConfig` can have any of the following properties defined:
+`RunnableConfig` には、以下のプロパティを定義できます。
 
 | Attribute       | Description                                                                                |
 |-----------------|--------------------------------------------------------------------------------------------|
-| run_name        | Name used for the given Runnable (not inherited).                                          |
-| run_id          | Unique identifier for this call. sub-calls will get their own unique run ids.              |
-| tags            | Tags for this call and any sub-calls.                                                      |
-| metadata        | Metadata for this call and any sub-calls.                                                  |
-| callbacks       | Callbacks for this call and any sub-calls.                                                 |
-| max_concurrency | Maximum number of parallel calls to make (e.g., used by batch).                            |
-| recursion_limit | Maximum number of times a call can recurse (e.g., used by Runnables that return Runnables) |
-| configurable    | Runtime values for configurable attributes of the Runnable.                                |
+| run_name | 指定された Runnable に使用される名前 (継承されません)。 |
+| run_id | この呼び出しの一意の識別子。サブ呼び出しにはそれぞれ一意の実行 ID が付与されます。 |
+| tags | この呼び出しとサブ呼び出しのタグ。 |
+| metadata | この呼び出しとサブ呼び出しのメタデータ。 |
+| callbacks | この呼び出しとサブ呼び出しのコールバック。 |
+| max_concurrency | 並列呼び出しの最大数 (例: バッチで使用)。 |
+| recursion_limit | 呼び出しが再帰できる最大回数 (例: Runnable を返す Runnable で使用) |
+| configurable | Runnable の構成可能な属性のランタイム値。 |
 
-Passing `config` to the `invoke` method is done like so:
+`config` を `invoke` メソッドに渡す方法は次の通りです:
 
 ```python
 some_runnable.invoke(
@@ -161,22 +155,21 @@ some_runnable.invoke(
 )
 ```
 
-### Propagation of RunnableConfig
+### RunnableConfig の伝播
 
-Many `Runnables` are composed of other Runnables, and it is important that the `RunnableConfig` is propagated to all sub-calls made by the Runnable. This allows providing run time configuration values to the parent Runnable that are inherited by all sub-calls.
+多くの `Runnable` は他の Runnable で構成されており、`RunnableConfig` が Runnable によって実行されるすべてのサブコールに伝播されることが重要です。これにより、親 Runnable に実行時設定値を提供し、すべてのサブコールに継承させることができます。
 
-If this were not the case, it would be impossible to set and propagate [callbacks](/docs/concepts/callbacks) or other configuration values like `tags` and `metadata` which
-are expected to be inherited by all sub-calls.
+伝播されなければ、[コールバック](/docs/concepts/callbacks) や、すべてのサブコールに継承されることが期待される `tags` や `metadata` などの設定値の設定と伝播は不可能になります。
 
-There are two main patterns by which new `Runnables` are created:
+新しい `Runnable` を作成する主なパターンは 2 つあります。
 
-1. Declaratively using [LangChain Expression Language (LCEL)](/docs/concepts/lcel):
+1. [LangChain Expression Language (LCEL)](/docs/concepts/lcel) を用いた宣言的な方法:
 
     ```python
     chain = prompt | chat_model | output_parser
     ```
 
-2. Using a [custom Runnable](#custom-runnables)  (e.g., `RunnableLambda`) or using the `@tool` decorator:
+2. [カスタム Runnable](#custom-runnables) (例: `RunnableLambda`) を使用するか、`@tool` デコレータを使用する:
 
     ```python
     def foo(input):
@@ -185,18 +178,17 @@ There are two main patterns by which new `Runnables` are created:
     foo_runnable = RunnableLambda(foo)
     ```
 
-LangChain will try to propagate `RunnableConfig` automatically for both of the patterns. 
+LangChain は、どちらのパターンでも `RunnableConfig` を自動的に伝播しようとします。
 
-For handling the second pattern, LangChain relies on Python's [contextvars](https://docs.python.org/3/library/contextvars.html).
+2 番目のパターンを処理するために、LangChain は Python の [contextvars](https://docs.python.org/3/library/contextvars.html) に依存しています。
 
-In Python 3.11 and above, this works out of the box, and you do not need to do anything special to propagate the `RunnableConfig` to the sub-calls.
+Python 3.11 以降では、これはそのまま動作し、サブ呼び出しに `RunnableConfig` を伝播するために特別な操作を行う必要はありません。
 
-In Python 3.9 and 3.10, if you are using **async code**, you need to manually pass the `RunnableConfig` through to the `Runnable` when invoking it. 
+Python 3.9 および 3.10 では、**非同期コード** を使用している場合は、`Runnable` を呼び出す際に `RunnableConfig` を手動で渡す必要があります。
 
-This is due to a limitation in [asyncio's tasks](https://docs.python.org/3/library/asyncio-task.html#asyncio.create_task)  in Python 3.9 and 3.10 which did
-not accept a `context` argument.
+これは、Python 3.9 および 3.10 の [asyncio のタスク](https://docs.python.org/3/library/asyncio-task.html#asyncio.create_task) の制限により、`context` 引数が受け入れられなかったためです。
 
-Propagating the `RunnableConfig` manually is done like so:
+`RunnableConfig` を手動で伝播するには、次のようにします。
 
 ```python
 async def foo(input, config): # <-- Note the config argument
@@ -206,42 +198,37 @@ foo_runnable = RunnableLambda(foo)
 ```
 
 :::caution
-When using Python 3.10 or lower and writing async code, `RunnableConfig` cannot be propagated
-automatically, and you will need to do it manually! This is a common pitfall when
-attempting to stream data using `astream_events` and `astream_log` as these methods
-rely on proper propagation of [callbacks](/docs/concepts/callbacks) defined inside of `RunnableConfig`.
+Python 3.10 以前を使用して非同期コードを記述する場合、`RunnableConfig` は自動的に伝播されないため、手動で伝播する必要があります。
+これは、`astream_events` および `astream_log` を使用してデータをストリーミングしようとするときによくある落とし穴です。これらのメソッドは、`RunnableConfig` 内で定義された [コールバック](/docs/concepts/callbacks) が適切に伝播されることに依存しているためです。
 :::
 
-### Setting custom run name, tags, and metadata
+### カスタム実行名、タグ、メタデータの設定
 
-The `run_name`, `tags`, and `metadata` attributes of the `RunnableConfig` dictionary can be used to set custom values for the run name, tags, and metadata for a given Runnable.
+`RunnableConfig` ディクショナリの `run_name`、`tags`、`metadata` 属性を使用して、特定の Runnable の実行名、タグ、メタデータにカスタム値を設定できます。
 
-The `run_name` is a string that can be used to set a custom name for the run. This name will be used in logs and other places to identify the run. It is not inherited by sub-calls.
+`run_name` は、実行にカスタム名を設定するために使用できる文字列です。この名前は、ログやその他の場所で実行を識別するために使用されます。サブコールには継承されません。
 
-The `tags` and `metadata` attributes are lists and dictionaries, respectively, that can be used to set custom tags and metadata for the run. These values are inherited by sub-calls.
+`tags` 属性と `metadata` 属性は、それぞれリストとディクショナリであり、実行にカスタムタグとメタデータを設定するために使用できます。これらの値はサブコールに継承されます。
 
-Using these attributes can be useful for tracking and debugging runs, as they will be surfaced in [LangSmith](https://docs.smith.langchain.com/) as trace attributes that you can
-filter and search on.
+これらの属性は [LangSmith](https://docs.smith.langchain.com/) でトレース属性として表示され、フィルタリングや検索に使用できるため、実行の追跡やデバッグに役立ちます。
 
-The attributes will also be propagated to [callbacks](/docs/concepts/callbacks), and will appear in streaming APIs like [astream_events](/docs/concepts/streaming) as part of each event in the stream.
+属性は [コールバック](/docs/concepts/callbacks) にも伝播され、ストリーム内の各イベントの一部として [astream_events](/docs/concepts/streaming) などのストリーミング API に表示されます。
 
-:::note Related
-* [How-to trace with LangChain](https://docs.smith.langchain.com/how_to_guides/tracing/trace_with_langchain)
+:::note 関連
+* [LangChain を使ったトレース方法](https://docs.smith.langchain.com/how_to_guides/tracing/trace_with_langchain)
 :::
 
-### Setting run id
+### 実行IDの設定
 
 :::note
-This is an advanced feature that is unnecessary for most users.
+これは高度な機能ですが、ほとんどのユーザーには不要です。
 :::
 
-You may need to set a custom `run_id` for a given run, in case you want 
-to reference it later or correlate it with other systems.
+後で参照したり、他のシステムと関連付けたりする場合に備えて、特定の実行にカスタムの `run_id` を設定する必要がある場合があります。
 
-The `run_id` MUST be a valid UUID string and **unique** for each run. It is used to identify
-the parent run, sub-class will get their own unique run ids automatically.
+`run_id` は有効な UUID 文字列で、各実行で **一意** である必要があります。これは親実行を識別するために使用され、サブクラスは独自の一意の実行IDを自動的に取得します。
 
-To set a custom `run_id`, you can pass it as a key-value pair in the `config` dictionary when invoking the Runnable:
+カスタムの `run_id` を設定するには、Runnable を呼び出す際に、`config` ディクショナリにキーと値のペアとして渡します。
 
 ```python
 import uuid
@@ -258,42 +245,37 @@ some_runnable.invoke(
 # Do something with the run_id
 ```
 
-### Setting recursion limit
+### 再帰回数の制限の設定
 
 :::note
-This is an advanced feature that is unnecessary for most users.
+これは高度な機能ですが、ほとんどのユーザーには不要です。
 :::
 
-Some Runnables may return other Runnables, which can lead to infinite recursion if not handled properly. To prevent this, you can set a `recursion_limit` in the `RunnableConfig` dictionary. This will limit the number of times a Runnable can recurse.
+一部のRunnableは他のRunnableを返す場合があり、適切に処理しないと無限再帰が発生する可能性があります。これを防ぐには、`RunnableConfig`ディクショナリに`recursion_limit`を設定します。これにより、Runnableが再帰できる回数を制限できます。
 
-### Setting max concurrency
+### 最大同時実行数の設定
 
-If using the `batch` or `batch_as_completed` methods, you can set the `max_concurrency` attribute in the `RunnableConfig` dictionary to control the maximum number of parallel calls to make. This can be useful when you want to limit the number of parallel calls to prevent overloading a server or API.
-
+`batch` メソッドまたは `batch_as_completed` メソッドを使用する場合、`RunnableConfig` ディクショナリの `max_concurrency` 属性を設定することで、並列呼び出しの最大数を制御できます。これは、サーバーや API の過負荷を防ぐために並列呼び出しの数を制限したい場合に便利です。
 
 :::tip
-If you're trying to rate limit the number of requests made by a **Chat Model**, you can use the built-in [rate limiter](/docs/concepts/chat_models#rate-limiting) instead of setting `max_concurrency`, which will be more effective.
+**チャットモデル** によるリクエスト数のレート制限を行う場合は、`max_concurrency` を設定する代わりに、組み込みの [レートリミッター](/docs/concepts/chat_models#rate-limiting) を使用するとより効果的です。
 
-See the [How to handle rate limits](/docs/how_to/chat_model_rate_limiting/) guide for more information.
+詳細については、[レート制限の処理方法](/docs/how_to/chat_model_rate_limiting/) ガイドをご覧ください。
 :::
 
-### Setting configurable
+### configurable の設定
 
-The `configurable` field is used to pass runtime values for configurable attributes of the Runnable.
+`configurable` フィールドは、Runnable の設定可能な属性に実行時の値を渡すために使用されます。
 
-It is used frequently in [LangGraph](/docs/concepts/architecture#langgraph) with
-[LangGraph Persistence](https://langchain-ai.github.io/langgraph/concepts/persistence/)
-and [memory](https://langchain-ai.github.io/langgraph/concepts/memory/).
+このフィールドは、[LangGraph](/docs/concepts/architecture#langgraph) の [LangGraph Persistence](https://langchain-ai.github.io/langgraph/concepts/persistence/) および [memory](https://langchain-ai.github.io/langgraph/concepts/memory/) で頻繁に使用されます。
 
-It is used for a similar purpose in [RunnableWithMessageHistory](https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html#langchain_core.runnables.history.RunnableWithMessageHistory) to specify either
-a `session_id` / `conversation_id` to keep track of conversation history.
+これは、[RunnableWithMessageHistory](https://python.langchain.com/api_reference/core/runnables/langchain_core.runnables.history.RunnableWithMessageHistory.html#langchain_core.runnables.history.RunnableWithMessageHistory) でも同様の目的で使用され、会話履歴を追跡するための `session_id` または `conversation_id` を指定します。
 
-In addition, you can use it to specify any custom configuration options to pass to any [Configurable Runnable](#configurable-runnables) that they create.
+さらに、これを使用して、作成する任意の [Configurable Runnable](#configurable-runnables) に渡すカスタム構成オプションを指定することもできます。
 
-### Setting callbacks
+### コールバックの設定
 
-Use this option to configure [callbacks](/docs/concepts/callbacks) for the runnable at 
-runtime. The callbacks will be passed to all sub-calls made by the runnable.
+このオプションを使用して、実行時にランナブルの[コールバック](/docs/concepts/callbacks)を設定します。設定したコールバックは、ランナブルによって実行されるすべてのサブコールに渡されます。
 
 ```python
 some_runnable.invoke(
@@ -307,46 +289,43 @@ some_runnable.invoke(
 )
 ```
 
-Please read the [Callbacks Conceptual Guide](/docs/concepts/callbacks) for more information on how to use callbacks in LangChain.
+LangChain でコールバックを使用する方法の詳細については、[コールバックの概念ガイド](/docs/concepts/callbacks)をお読みください。
 
 :::important
-If you're using Python 3.9 or 3.10 in an async environment, you must propagate
-the `RunnableConfig` manually to sub-calls in some cases. Please see the
-[Propagating RunnableConfig](#propagation-of-runnableconfig) section for more information.
+非同期環境で Python 3.9 または 3.10 を使用している場合、場合によっては `RunnableConfig` をサブコールに手動で伝播する必要があります。
+詳細については、[RunnableConfig の伝播](#propagation-of-runnableconfig) セクションを参照してください。
 :::
 
-## Creating a runnable from a function {#custom-runnables}
+## 関数から runnable を作成する {#custom-runnables}
 
-You may need to create a custom Runnable that runs arbitrary logic. This is especially
-useful if using [LangChain Expression Language (LCEL)](/docs/concepts/lcel) to compose
-multiple Runnables and you need to add custom processing logic in one of the steps.
+任意のロジックを実行するカスタム runnable を作成する必要がある場合があります。
+これは、[LangChain Expression Language (LCEL)](/docs/concepts/lcel) を使用して複数の runnable を作成し、その中の1つのステップにカスタム処理ロジックを追加する必要がある場合に特に便利です。
 
-There are two ways to create a custom Runnable from a function:
+関数からカスタム runnable を作成するには、2つの方法があります。
 
-* `RunnableLambda`: Use this for simple transformations where streaming is not required.
-* `RunnableGenerator`: use this for more complex transformations when streaming is needed.
+* `RunnableLambda`: ストリーミングが不要な単純な変換に使用します。
+* `RunnableGenerator`: ストリーミングが必要な複雑な変換に使用します。
 
-See the [How to run custom functions](/docs/how_to/functions) guide for more information on how to use `RunnableLambda` and `RunnableGenerator`.
+`RunnableLambda` と `RunnableGenerator` の使用方法の詳細については、[カスタム関数の実行方法](/docs/how_to/functions) ガイドをご覧ください。
 
 :::important
-Users should not try to subclass Runnables to create a new custom Runnable. It is
-much more complex and error-prone than simply using `RunnableLambda` or `RunnableGenerator`.
-:::
+ユーザーは、Runnable をサブクラス化して新しいカスタム Runnable を作成しようとしないでください。
+これは、単純に `RunnableLambda` や `RunnableGenerator` を使用するよりもはるかに複雑で、エラーが発生しやすくなります。:::
 
-## Configurable runnables
+## 設定可能な Runnable
 
 :::note
-This is an advanced feature that is unnecessary for most users.
+これは高度な機能ですが、ほとんどのユーザーには不要です。
 
-It helps with configuration of large "chains" created using the [LangChain Expression Language (LCEL)](/docs/concepts/lcel)
-and is leveraged by [LangServe](/docs/concepts/architecture#langserve) for deployed Runnables.
+これは、[LangChain Expression Language (LCEL)](/docs/concepts/lcel) を使用して作成された大規模な「チェーン」の設定に役立ちます。
+また、[LangServe](/docs/concepts/architecture#langserve) によってデプロイされた Runnable に活用されます。
 :::
 
-Sometimes you may want to experiment with, or even expose to the end user, multiple different ways of doing things with your Runnable. This could involve adjusting parameters like the temperature in a chat model or even switching between different chat models.
+ランナブルで複数の異なる動作方法を試したり、エンドユーザーに公開したりしたい場合があります。これには、チャットモデルの温度などのパラメータを調整したり、異なるチャットモデルを切り替えたりすることが含まれます。
 
-To simplify this process, the Runnable interface provides two methods for creating configurable Runnables at runtime:
+このプロセスを簡素化するために、Runnable インターフェースは、実行時に設定可能なランナブルを作成するための2つのメソッドを提供しています。
 
-* `configurable_fields`: This method allows you to configure specific **attributes** in a Runnable. For example, the `temperature` attribute of a chat model.
-* `configurable_alternatives`: This method enables you to specify **alternative** Runnables that can be run during runtime. For example, you could specify a list of different chat models that can be used.
+* `configurable_fields`: このメソッドを使用すると、ランナブルの特定の**属性**を設定できます。例えば、チャットモデルの `temperature` 属性などです。
+* `configurable_alternatives`: このメソッドを使用すると、実行時に実行可能な**代替** Runnable を指定できます。例えば、使用可能な複数のチャットモデルのリストを指定できます。
 
-See the [How to configure runtime chain internals](/docs/how_to/configure) guide for more information on how to configure runtime chain internals.
+ランタイムチェーンの内部設定方法の詳細については、[ランタイムチェーンの内部設定方法](/docs/how_to/configure)ガイドを参照してください。
